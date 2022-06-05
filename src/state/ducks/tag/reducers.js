@@ -22,7 +22,7 @@ export default (state = initialState, action) => {
         return {
           batchId: tag.batchId,
           user: tag.user,
-          url: `https://app.chapysocial.com/${
+          url: `https://app.infocard.me/${
             tag.customId ? tag.customId : tag.id
           }`,
         };
