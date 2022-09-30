@@ -3,7 +3,7 @@ import AdminLayout from 'components/AdminLayout/AdminLayout';
 import AdminBreadcrumbs from 'components/AdminBreadcrumbs/AdminBreadcrumbs';
 import { Typography, Grid, Button, makeStyles } from '@material-ui/core';
 import MUIDataTable from 'mui-datatables';
-import { getBatches } from 'state/ducks/tag/actions';
+import { getBatches, deleteBatch } from 'state/ducks/batch/actions';
 import { useDispatch, useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
@@ -23,36 +23,82 @@ const useStyles = makeStyles((theme) => ({
 
 const columns = [
   {
-    name: 'batchId',
-    label: 'Batch Id',
+    name: 'id',
+    label: 'Id',
     options: {
       filter: true,
       sort: true,
     },
   },
+  {
+    name: 'name',
+    label: 'Name',
+    options: {
+      filter: true,
+      sort: false,
+    },
+  },
+  {
+    name: 'description',
+    label: 'Description',
+    options: {
+      filter: true,
+      sort: false,
+    },
+  },
+  {
+    name: 'createdAt',
+    label: 'Created At',
+    options: {
+      filter: true,
+      sort: false,
+    },
+  },
 ];
 
-const AllTagsPage = (props) => {
+const AllBatchesPage = (props) => {
   const { history } = props;
   const classes = useStyles();
 
   const dispatch = useDispatch();
-  const { results } = useSelector((state) => state.tag);
+  const [selectedPage, setSelectedPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [search, setSearch] = useState('');
+  const { results, page, totalResults } = useSelector((state) => state.batch);
 
   const { isLoggedIn } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (isLoggedIn) {
-      dispatch(getBatches());
+      dispatch(getBatches(selectedPage, limit, search));
     } else {
       history.push('/login');
     }
-  }, [history, isLoggedIn, dispatch]);
+  }, [history, isLoggedIn, dispatch, selectedPage]);
 
   const options = {
     filterType: 'checkbox',
+    count: totalResults,
+    page: page,
+    serverSide: true,
+    selectableRows: false,
     onRowClick: (rowData, rowState) => {
-      history.push(`/tags/${rowData[0]}`);
+      history.push(`/batches/${rowData[0]}`);
+    },
+    onTableChange: (action, tableState) => {
+      switch (action) {
+        case 'changePage':
+          setSelectedPage(tableState.page + 1);
+          break;
+        case 'changeRowsPerPage':
+          setLimit(tableState.rowsPerPage);
+          setSelectedPage(1);
+          break;
+        case 'search':
+          break;
+        default:
+          break;
+      }
     },
   };
 
@@ -61,23 +107,23 @@ const AllTagsPage = (props) => {
       <Grid container className={classes.my3} alignItems="center">
         <Grid item className={classes.mRight}>
           <Typography variant="h5" component="h1">
-            Tags
+            Batches
           </Typography>
         </Grid>
         <Grid item>
           <Button
-            onClick={() => history.push('/tags/add-tag')}
+            onClick={() => history.push('/batches/add-batch')}
             variant="outlined"
             color="primary"
             size="small"
           >
-            Add Tag
+            Add Batch
           </Button>
         </Grid>
       </Grid>
       <AdminBreadcrumbs path={history} />
       <MUIDataTable
-        title={'Tags List'}
+        title={'Batches List'}
         data={results}
         columns={columns}
         options={options}
@@ -86,4 +132,4 @@ const AllTagsPage = (props) => {
   );
 };
 
-export default AllTagsPage;
+export default AllBatchesPage;

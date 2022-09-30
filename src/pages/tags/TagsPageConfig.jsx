@@ -1,23 +1,17 @@
-import AllTagsPage from './AllTagsPage';
 import AddTagPage from './AddTagPage';
-import BatchPage from './BatchPage';
+import UpdateTagPage from './UpdateTagPage';
 
 export const TagsPageConfig = {
   routes: [
     {
-      path: '/tags',
-      exact: true,
-      component: AllTagsPage,
-    },
-    {
-      path: '/tags/add-tag',
+      path: '/tags/add-tag/:id',
       exact: true,
       component: AddTagPage,
     },
     {
       path: '/tags/:id',
       exact: true,
-      component: BatchPage,
+      component: UpdateTagPage,
     },
   ],
 };

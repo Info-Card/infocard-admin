@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import AdminLayout from 'components/AdminLayout/AdminLayout';
 import AdminBreadcrumbs from 'components/AdminBreadcrumbs/AdminBreadcrumbs';
 import { Typography, Grid, Button, makeStyles } from '@material-ui/core';
 import MUIDataTable from 'mui-datatables';
 import { getTags, deleteTag } from 'state/ducks/tag/actions';
 import { useDispatch, useSelector } from 'react-redux';
-
 import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
+
 const useStyles = makeStyles((theme) => ({
   my3: {
     margin: '1.3rem 0',
@@ -23,40 +24,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AllTagsPage = (props) => {
-  const { history, match } = props;
+const AllTags = ({ batchId }) => {
   const classes = useStyles();
-  const batchId = match.params.id;
+  const history = useHistory();
   const dispatch = useDispatch();
-  const [selectedPage, setSelectedPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [search, setSearch] = useState('');
-  const { results, page, totalResults } = useSelector((state) => state.tag);
-
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { results } = useSelector((state) => state.tag);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      dispatch(getTags(`${batchId}&${search}`));
-    } else {
-      history.push('/login');
-    }
-  }, [history, isLoggedIn, dispatch, selectedPage]);
-
-  const options = {
-    filterType: 'checkbox',
-    print: false,
-    filter: false,
-    viewColumns: false,
-  };
+    dispatch(getTags(1, 999999999999, `&batch=${batchId}`));
+  }, [dispatch, batchId]);
 
   const columns = [
     {
       name: 'url',
       label: 'URL',
       options: {
-        filter: false,
-        sort: false,
+        filter: true,
+        sort: true,
+        download: true,
       },
     },
     {
@@ -73,24 +58,41 @@ const AllTagsPage = (props) => {
     },
   ];
 
+  const options = {
+    print: false,
+    filter: false,
+    viewColumns: false,
+    selectableRows: false,
+  };
+
   return (
-    <AdminLayout>
+    <>
       <Grid container className={classes.my3} alignItems="center">
         <Grid item className={classes.mRight}>
           <Typography variant="h5" component="h1">
             Tags
           </Typography>
         </Grid>
+        <Grid item>
+          <Button
+            onClick={() => history.push(`/tags/add-tag/${batchId}`)}
+            variant="outlined"
+            color="primary"
+            size="small"
+          >
+            Add Tag
+          </Button>
+        </Grid>
       </Grid>
-      <AdminBreadcrumbs path={history} />
+
       <MUIDataTable
         title={'Tags List'}
         data={results}
         columns={columns}
         options={options}
       />
-    </AdminLayout>
+    </>
   );
 };
 
-export default AllTagsPage;
+export default AllTags;

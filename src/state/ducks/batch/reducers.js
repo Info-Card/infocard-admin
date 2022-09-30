@@ -6,35 +6,35 @@ export default (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
-    case types.TAG_REQUEST:
+    case types.BATCH_REQUEST:
       return {
         ...state,
         loading: true,
       };
-    case types.TAG_FAIL:
+    case types.BATCH_FAIL:
       return {
         ...state,
         loading: false,
         error: payload,
       };
-    case types.GET_TAGS_SUCCESS:
+    case types.GET_BATCHES_SUCCESS:
       return payload;
-    case types.CREATE_TAG_SUCCESS:
+    case types.CREATE_BATCH_SUCCESS:
       return {
         loading: false,
         success: true,
       };
-    case types.UPDATE_TAG_SUCCESS:
+    case types.UPDATE_BATCH_SUCCESS:
       return {
         loading: false,
         success: true,
       };
-    case types.GET_TAG_SUCCESS:
+    case types.GET_BATCH_SUCCESS:
       return {
         loading: false,
-        selectedTag: payload,
+        selectedBatch: payload,
       };
-    case types.TAG_RESET:
+    case types.BATCH_RESET:
       return {};
     default:
       return state;

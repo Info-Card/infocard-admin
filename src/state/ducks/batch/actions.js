@@ -1,16 +1,16 @@
 import * as types from './types';
 
-import TagService from 'state/services/tag.service';
+import BatchService from '../../services/batches.service';
 
-export const getTags = (page, limit, query) => async (dispatch) => {
+export const getBatches = (page, limit) => async (dispatch) => {
   try {
     dispatch({
-      type: types.TAG_REQUEST,
+      type: types.BATCH_REQUEST,
     });
-    const res = await TagService.getAll(page, limit, query);
+    const res = await BatchService.getAll(page, limit);
 
     dispatch({
-      type: types.GET_TAGS_SUCCESS,
+      type: types.GET_BATCHES_SUCCESS,
       payload: res.data,
     });
   } catch (error) {
@@ -19,21 +19,21 @@ export const getTags = (page, limit, query) => async (dispatch) => {
         ? error.response.data.message
         : error.message;
     dispatch({
-      type: types.TAG_FAIL,
+      type: types.BATCH_FAIL,
       payload: message,
     });
   }
 };
 
-export const getTag = (id) => async (dispatch) => {
+export const getBatch = (id) => async (dispatch) => {
   try {
     dispatch({
-      type: types.TAG_REQUEST,
+      type: types.BATCH_REQUEST,
     });
-    const res = await TagService.get(id);
+    const res = await BatchService.get(id);
 
     dispatch({
-      type: types.GET_TAG_SUCCESS,
+      type: types.GET_BATCH_SUCCESS,
       payload: res.data,
     });
   } catch (error) {
@@ -42,21 +42,21 @@ export const getTag = (id) => async (dispatch) => {
         ? error.response.data.message
         : error.message;
     dispatch({
-      type: types.TAG_FAIL,
+      type: types.BATCH_FAIL,
       payload: message,
     });
   }
 };
 
-export const createTag = (data) => async (dispatch) => {
+export const createBatch = (data) => async (dispatch) => {
   try {
     dispatch({
-      type: types.TAG_REQUEST,
+      type: types.BATCH_REQUEST,
     });
-    const res = await TagService.create(data);
+    const res = await BatchService.create(data);
 
     dispatch({
-      type: types.CREATE_TAG_SUCCESS,
+      type: types.CREATE_BATCH_SUCCESS,
       payload: res.data,
     });
   } catch (error) {
@@ -65,21 +65,21 @@ export const createTag = (data) => async (dispatch) => {
         ? error.response.data.message
         : error.message;
     dispatch({
-      type: types.TAG_FAIL,
+      type: types.BATCH_FAIL,
       payload: message,
     });
   }
 };
 
-export const updateTag = (id, data) => async (dispatch) => {
+export const updateBatch = (id, data) => async (dispatch) => {
   try {
     dispatch({
-      type: types.TAG_REQUEST,
+      type: types.BATCH_REQUEST,
     });
-    const res = await TagService.update(id, data);
+    const res = await BatchService.update(id, data);
 
     dispatch({
-      type: types.UPDATE_TAG_SUCCESS,
+      type: types.UPDATE_BATCH_SUCCESS,
       payload: res.data,
     });
   } catch (error) {
@@ -88,22 +88,22 @@ export const updateTag = (id, data) => async (dispatch) => {
         ? error.response.data.message
         : error.message;
     dispatch({
-      type: types.TAG_FAIL,
+      type: types.BATCH_FAIL,
       payload: message,
     });
   }
 };
 
-export const deleteTag = (id) => async (dispatch) => {
+export const deleteBatch = (id) => async (dispatch) => {
   try {
-    await TagService.delete(id);
+    await BatchService.delete(id);
   } catch (error) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message;
     dispatch({
-      type: types.TAG_FAIL,
+      type: types.BATCH_FAIL,
       payload: message,
     });
   }

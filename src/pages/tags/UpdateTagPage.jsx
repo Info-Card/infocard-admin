@@ -3,6 +3,8 @@ import AdminLayout from 'components/AdminLayout/AdminLayout';
 import AdminBreadcrumbs from 'components/AdminBreadcrumbs/AdminBreadcrumbs';
 import { Typography, Grid, makeStyles } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
+import { useData } from 'context/DataContext';
+import { getTag } from 'state/ducks/tag/actions';
 import * as types from 'state/ducks/tag/types';
 import TagForm from './components/TagForm';
 
@@ -18,41 +20,49 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddTagPage = (props) => {
+const UpdateTagPage = (props) => {
   const { history, match } = props;
-  const batch = match.params.id;
+  const tagId = match.params.id;
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const { success } = useSelector((state) => state.tag);
+  const { setValues, data } = useData();
+
+  const { success, selectedTag } = useSelector((state) => state.tag);
   const { isLoggedIn } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (isLoggedIn) {
       if (success) {
         dispatch({ type: types.TAG_RESET });
-        history.push(`/batches/${batch}`);
+        history.push(`/batches`);
+      } else {
+        if (!selectedTag) {
+          dispatch(getTag(tagId));
+        } else {
+          setValues(selectedTag);
+        }
       }
     } else {
       history.push('/login');
     }
-  }, [dispatch, history, success, isLoggedIn, batch]);
+  }, [dispatch, history, success, isLoggedIn, tagId, selectedTag]);
 
   return (
     <AdminLayout>
       <Grid container className={classes.my3} alignItems="center">
         <Grid item className={classes.mRight}>
           <Typography variant="h5" component="h1">
-            Add New Tag
+            Update Tag
           </Typography>
         </Grid>
       </Grid>
       <AdminBreadcrumbs path={history} />
       <div className={classes.root}>
-        <TagForm batch={batch} />
+        {data.id ? <TagForm preloadedValues={data} /> : <></>}
       </div>
     </AdminLayout>
   );
 };
 
-export default AddTagPage;
+export default UpdateTagPage;

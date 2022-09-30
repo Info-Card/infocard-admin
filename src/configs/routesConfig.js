@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { DashboardPageConfig } from '../pages/dashboard/DashboardPageConfig';
 import { UsersPageConfig } from '../pages/users/UsersPageConfig';
 import { CategoriesPageConfig } from '../pages/categories/CategoriesPageConfig';
+import { BatchesPageConfig } from '../pages/batches/BatchesPageConfig';
 import { TagsPageConfig } from '../pages/tags/TagsPageConfig';
 import { LoginPageConfig } from '../pages/auth/login/LoginPageConfig';
 import { Error404PageConfig } from '../pages/errors/404/Error404PageConfig';
@@ -14,6 +15,7 @@ const routeConfigs = [
   ...DashboardPageConfig.routes,
   ...UsersPageConfig.routes,
   ...CategoriesPageConfig.routes,
+  ...BatchesPageConfig.routes,
   ...TagsPageConfig.routes,
   ...LoginPageConfig.routes,
   ...Error404PageConfig.routes,

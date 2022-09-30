@@ -7,13 +7,14 @@ import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import { Grid, makeStyles, Button, MenuItem } from '@material-ui/core';
-import { createTag, updateTag } from 'state/ducks/tag/actions';
+import { createBatch, updateBatch } from 'state/ducks/batch/actions';
 import Loader from 'components/Loader/Loader';
 import Message from 'components/Message/Message';
 
 const schema = yup.object().shape({
-  customId: yup.string(),
-  name: yup.string(),
+  name: yup.string().required(),
+  description: yup.string(),
+  quantity: yup.string(),
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -29,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TagForm = ({ preloadedValues, batch }) => {
+const BatchForm = ({ preloadedValues }) => {
   const classes = useStyles();
 
   const dispatch = useDispatch();
@@ -47,9 +48,10 @@ const TagForm = ({ preloadedValues, batch }) => {
 
   const onSubmit = (data) => {
     if (preloadedValues) {
-      dispatch(updateTag(preloadedValues.id, data));
+      delete data.quantity;
+      dispatch(updateBatch(preloadedValues.id, data));
     } else {
-      dispatch(createTag({ ...data, batch }));
+      dispatch(createBatch(data));
     }
   };
 
@@ -72,14 +74,30 @@ const TagForm = ({ preloadedValues, batch }) => {
         <Grid item xs={4}>
           <Input
             ref={register}
-            id="customId"
+            id="description"
             type="text"
-            label="Custom Id"
-            name="customId"
-            error={!!errors.customId}
-            helperText={errors?.customId?.message}
+            label="Description"
+            name="description"
+            error={!!errors.description}
+            helperText={errors?.description?.message}
           />
         </Grid>
+        {preloadedValues ? (
+          <></>
+        ) : (
+          <Grid item xs={4}>
+            <Input
+              ref={register}
+              id="quantity"
+              type="text"
+              label="Quantity"
+              name="quantity"
+              error={!!errors.quantity}
+              helperText={errors?.quantity?.message}
+            />
+          </Grid>
+        )}
+
         <Grid item xs={12}>
           <div className={classes.mBottom}>
             <Button
@@ -92,9 +110,9 @@ const TagForm = ({ preloadedValues, batch }) => {
               {loading ? (
                 <Loader />
               ) : preloadedValues ? (
-                'Update Tag'
+                'Update Batch'
               ) : (
-                'Save Tag'
+                'Save Batch'
               )}
             </Button>
           </div>
@@ -104,4 +122,4 @@ const TagForm = ({ preloadedValues, batch }) => {
   );
 };
 
-export default TagForm;
+export default BatchForm;

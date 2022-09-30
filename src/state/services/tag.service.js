@@ -1,18 +1,24 @@
 import api from './api';
 
 class TagService {
-  getAll(batchId) {
-    return api.get(`tags?batchId=${batchId}`);
+  getAll(page, limit, query) {
+    return api.get(`tags?page=${page}&limit=${limit}${query ? query : ''}`);
   }
-  getBatches() {
-    return api.get(`tags/batches`);
-  }
+
   get(id) {
     return api.get(`tags/${id}`);
   }
 
   create(data) {
     return api.post('tags', data);
+  }
+
+  update(id, data) {
+    return api.patch(`tags/${id}`, data);
+  }
+
+  delete(id) {
+    return api.delete(`tags/${id}`);
   }
 }
 
