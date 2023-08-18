@@ -1,22 +1,21 @@
-import React, { useEffect } from 'react';
-import AdminLayout from 'components/AdminLayout/AdminLayout';
-import AdminBreadcrumbs from 'components/AdminBreadcrumbs/AdminBreadcrumbs';
-import { Typography, Grid, makeStyles } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
-import { useData } from 'context/DataContext';
-import { getUser } from 'state/ducks/user/actions';
-import * as types from 'state/ducks/user/types';
-import UserForm from './components/UserForm';
+import React, { useEffect } from "react";
+import AdminLayout from "components/AdminLayout/AdminLayout";
+import AdminBreadcrumbs from "components/AdminBreadcrumbs/AdminBreadcrumbs";
+import { Typography, Grid, makeStyles } from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser } from "state/ducks/user/actions";
+import * as types from "state/ducks/user/types";
+import UserForm from "./components/UserForm";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
   my3: {
-    margin: '1.3rem 0',
+    margin: "1.3rem 0",
   },
   mRight: {
-    marginRight: '.85rem',
+    marginRight: ".85rem",
   },
 }));
 
@@ -26,8 +25,6 @@ const UpdateUserPage = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const { setValues, data } = useData();
-
   const { success, selectedUser } = useSelector((state) => state.user);
   const { isLoggedIn } = useSelector((state) => state.auth);
 
@@ -35,18 +32,14 @@ const UpdateUserPage = (props) => {
     if (isLoggedIn) {
       if (success) {
         dispatch({ type: types.USER_RESET });
-        history.push('/users');
+        history.push("/users");
       } else {
-        if (!selectedUser) {
-          dispatch(getUser(userId));
-        } else {
-          setValues(selectedUser);
-        }
+        dispatch(getUser(userId));
       }
     } else {
-      history.push('/login');
+      history.push("/login");
     }
-  }, [dispatch, history, success, isLoggedIn, userId, selectedUser]);
+  }, [dispatch, history, success, isLoggedIn, userId]);
 
   return (
     <AdminLayout>
@@ -59,7 +52,7 @@ const UpdateUserPage = (props) => {
       </Grid>
       <AdminBreadcrumbs path={history} />
       <div className={classes.root}>
-        {data.id ? <UserForm preloadedValues={data} /> : <></>}
+        {selectedUser && <UserForm preloadedValues={selectedUser} />}
       </div>
     </AdminLayout>
   );

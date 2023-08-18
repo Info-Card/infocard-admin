@@ -86,7 +86,7 @@ const AllUsersPage = (props) => {
     } else {
       history.push("/login");
     }
-  }, [history, isLoggedIn, dispatch, selectedPage]);
+  }, [history, isLoggedIn, dispatch, selectedPage, limit, search]);
 
   const options = {
     filterType: "checkbox",
@@ -99,6 +99,7 @@ const AllUsersPage = (props) => {
       });
     },
     onRowClick: (rowData, rowState) => {
+      console.log(rowData);
       history.push(`/users/${rowData[0]}`);
     },
     onTableChange: (action, tableState) => {
