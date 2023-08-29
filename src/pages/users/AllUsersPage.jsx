@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
+
 const useStyles = makeStyles((theme) => ({
   my3: {
     margin: "1.3rem 0",
@@ -75,18 +76,17 @@ const AllUsersPage = (props) => {
   const dispatch = useDispatch();
   const [selectedPage, setSelectedPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [search, setSearch] = useState("");
   const { results, page, totalResults } = useSelector((state) => state.user);
 
   const { isLoggedIn } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (isLoggedIn) {
-      dispatch(getUsers(selectedPage, limit, search));
+      dispatch(getUsers(selectedPage, limit, ""));
     } else {
       history.push("/login");
     }
-  }, [history, isLoggedIn, dispatch, selectedPage, limit, search]);
+  }, [history, isLoggedIn, dispatch, selectedPage, limit]);
 
   const options = {
     filterType: "checkbox",
@@ -150,11 +150,3 @@ const AllUsersPage = (props) => {
 };
 
 export default AllUsersPage;
-
-const debounce = (callback, delay) => {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => callback(...args), delay);
-  };
-};

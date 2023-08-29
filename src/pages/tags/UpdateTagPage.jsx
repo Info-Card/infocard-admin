@@ -1,22 +1,22 @@
-import React, { useEffect } from 'react';
-import AdminLayout from 'components/AdminLayout/AdminLayout';
-import AdminBreadcrumbs from 'components/AdminBreadcrumbs/AdminBreadcrumbs';
-import { Typography, Grid, makeStyles } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
-import { useData } from 'context/DataContext';
-import { getTag } from 'state/ducks/tag/actions';
-import * as types from 'state/ducks/tag/types';
-import TagForm from './components/TagForm';
+import React, { useEffect } from "react";
+import AdminLayout from "components/AdminLayout/AdminLayout";
+import AdminBreadcrumbs from "components/AdminBreadcrumbs/AdminBreadcrumbs";
+import { Typography, Grid, makeStyles } from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
+import { useData } from "context/DataContext";
+import { getTag } from "state/ducks/tag/actions";
+import * as types from "state/ducks/tag/types";
+import TagForm from "./components/TagForm";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
   my3: {
-    margin: '1.3rem 0',
+    margin: "1.3rem 0",
   },
   mRight: {
-    marginRight: '.85rem',
+    marginRight: ".85rem",
   },
 }));
 
@@ -44,9 +44,9 @@ const UpdateTagPage = (props) => {
         }
       }
     } else {
-      history.push('/login');
+      history.push("/login");
     }
-  }, [dispatch, history, success, isLoggedIn, tagId, selectedTag]);
+  }, [dispatch, history, success, isLoggedIn, tagId, selectedTag, setValues]);
 
   return (
     <AdminLayout>

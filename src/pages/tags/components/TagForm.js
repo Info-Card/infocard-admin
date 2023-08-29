@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import Form from 'components/Form/Form';
-import Input from 'components/Input/Input';
-import { useDispatch, useSelector } from 'react-redux';
-import SaveIcon from '@material-ui/icons/Save';
-import * as yup from 'yup';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers';
-import { Grid, makeStyles, Button, MenuItem } from '@material-ui/core';
-import { createTag, updateTag } from 'state/ducks/tag/actions';
-import Loader from 'components/Loader/Loader';
-import Message from 'components/Message/Message';
+import React from "react";
+import Form from "components/Form/Form";
+import Input from "components/Input/Input";
+import { useDispatch, useSelector } from "react-redux";
+import SaveIcon from "@material-ui/icons/Save";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers";
+import { Grid, makeStyles, Button } from "@material-ui/core";
+import { createTag, updateTag } from "state/ducks/tag/actions";
+import Loader from "components/Loader/Loader";
+import Message from "components/Message/Message";
 
 const schema = yup.object().shape({
   customId: yup.string(),
@@ -18,14 +18,14 @@ const schema = yup.object().shape({
 
 const useStyles = makeStyles((theme) => ({
   mBottom: {
-    display: 'flex',
-    justifyContent: 'center',
+    display: "flex",
+    justifyContent: "center",
   },
   button: {
-    padding: '10px',
+    padding: "10px",
   },
   textField: {
-    width: '100%',
+    width: "100%",
   },
 }));
 
@@ -37,11 +37,10 @@ const TagForm = ({ preloadedValues, batch }) => {
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors },
   } = useForm({
     defaultValues: preloadedValues,
-    mode: 'onBlur',
+    mode: "onBlur",
     resolver: yupResolver(schema),
   });
 
@@ -92,9 +91,9 @@ const TagForm = ({ preloadedValues, batch }) => {
               {loading ? (
                 <Loader />
               ) : preloadedValues ? (
-                'Update Tag'
+                "Update Tag"
               ) : (
-                'Save Tag'
+                "Save Tag"
               )}
             </Button>
           </div>

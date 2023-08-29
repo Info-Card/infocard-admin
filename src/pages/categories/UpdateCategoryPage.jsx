@@ -1,35 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import AdminLayout from 'components/AdminLayout/AdminLayout';
-import AdminBreadcrumbs from 'components/AdminBreadcrumbs/AdminBreadcrumbs';
-import { Typography, Grid, makeStyles, Avatar } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
-import { getCategory } from 'state/ducks/category/actions';
-import { deletePlatform } from 'state/ducks/platform/actions';
-import * as types from 'state/ducks/category/types';
-import * as platformTypes from 'state/ducks/platform/types';
-import CategoryForm from './components/CategoryForm';
-import PlatformForm from './components/PlatformForm';
-import MUIDataTable from 'mui-datatables';
-
-import CheckIcon from '@material-ui/icons/Check';
-import ClearIcon from '@material-ui/icons/Clear';
+import React, { useEffect, useState } from "react";
+import AdminLayout from "components/AdminLayout/AdminLayout";
+import AdminBreadcrumbs from "components/AdminBreadcrumbs/AdminBreadcrumbs";
+import { Typography, Grid, makeStyles, Avatar } from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
+import { getCategory } from "state/ducks/category/actions";
+import { deletePlatform } from "state/ducks/platform/actions";
+import * as types from "state/ducks/category/types";
+import * as platformTypes from "state/ducks/platform/types";
+import CategoryForm from "./components/CategoryForm";
+import PlatformForm from "./components/PlatformForm";
+import MUIDataTable from "mui-datatables";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
   my3: {
-    margin: '1.3rem 0',
+    margin: "1.3rem 0",
   },
   mRight: {
-    marginRight: '.85rem',
+    marginRight: ".85rem",
   },
 }));
 
 const columns = [
   {
-    name: 'id',
-    label: 'Id',
+    name: "id",
+    label: "Id",
     options: {
       filter: true,
       sort: true,
@@ -37,31 +34,31 @@ const columns = [
     },
   },
   {
-    name: 'image',
-    label: 'Image',
+    name: "image",
+    label: "Image",
     options: {
       filter: false,
       customBodyRender: (value, tableMeta, updateValue) => {
         return (
           <Avatar
             variant="rounded"
-            src={value === '' ? '' : process.env.REACT_APP_API_URL + value}
+            src={value === "" ? "" : process.env.REACT_APP_API_URL + value}
           />
         );
       },
     },
   },
   {
-    name: 'title',
-    label: 'Title',
+    name: "title",
+    label: "Title",
     options: {
       filter: true,
       sort: false,
     },
   },
   {
-    name: 'headline',
-    label: 'Headline',
+    name: "headline",
+    label: "Headline",
     options: {
       filter: true,
       sort: false,
@@ -87,7 +84,7 @@ const UpdateCategoryPage = (props) => {
     if (isLoggedIn) {
       if (success) {
         dispatch({ type: types.CATEGORY_RESET });
-        history.push('/categories');
+        history.push("/categories");
       }
       if (platformSuccess) {
         dispatch({ type: platformTypes.PLATFORM_RESET });
@@ -98,7 +95,7 @@ const UpdateCategoryPage = (props) => {
         dispatch(getCategory(categoryId));
       }
     } else {
-      history.push('/login');
+      history.push("/login");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -111,7 +108,7 @@ const UpdateCategoryPage = (props) => {
     platformSuccess,
   ]);
   const options = {
-    filterType: 'checkbox',
+    filterType: "checkbox",
     onRowsDelete: (rowsDeleted, dataRows) => {
       rowsDeleted.data.forEach((row) => {
         dispatch(deletePlatform(selectedCategory.platforms[row.dataIndex].id));
@@ -167,7 +164,7 @@ const UpdateCategoryPage = (props) => {
 
         {selectedCategory && selectedCategory.platforms.length > 0 ? (
           <MUIDataTable
-            title={'Platforms List'}
+            title={"Platforms List"}
             className={classes.my3}
             data={selectedCategory.platforms}
             columns={columns}
