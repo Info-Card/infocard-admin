@@ -1,105 +1,58 @@
-import React, { useEffect, useState } from "react";
-import AdminLayout from "components/AdminLayout/AdminLayout";
-import AdminBreadcrumbs from "components/AdminBreadcrumbs/AdminBreadcrumbs";
-import { Typography, Grid, Button, makeStyles } from "@material-ui/core";
-import MUIDataTable from "mui-datatables";
-import { getBatches } from "state/ducks/batch/actions";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import AdminLayout from 'components/AdminLayout/AdminLayout';
+import AdminBreadcrumbs from 'components/AdminBreadcrumbs/AdminBreadcrumbs';
+import { Typography, Grid, makeStyles, Button } from '@material-ui/core';
+import { getBatches } from 'state/ducks/batch/actions';
+import { useDispatch, useSelector } from 'react-redux';
 
-const useStyles = makeStyles((theme) => ({
+import DataTable from 'components/Table/DataTable';
+
+const useStyles = makeStyles(() => ({
   my3: {
-    margin: "1.3rem 0",
+    margin: '1.3rem 0',
   },
   mb0: {
     marginBottom: 0,
   },
   mRight: {
-    marginRight: ".85rem",
+    marginRight: '.85rem',
   },
   p1: {
-    padding: ".85rem",
+    padding: '.85rem',
   },
 }));
 
 const columns = [
   {
-    name: "id",
-    label: "Id",
-    options: {
-      filter: true,
-      sort: true,
-    },
+    name: 'id',
+    label: 'Id',
   },
   {
-    name: "name",
-    label: "Name",
-    options: {
-      filter: true,
-      sort: false,
-    },
+    name: 'name',
+    label: 'Name',
   },
   {
-    name: "description",
-    label: "Description",
-    options: {
-      filter: true,
-      sort: false,
-    },
+    name: 'description',
+    label: 'Description',
   },
   {
-    name: "createdAt",
-    label: "Created At",
-    options: {
-      filter: true,
-      sort: false,
-    },
+    name: 'createdAt',
+    label: 'Created At',
   },
 ];
 
 const AllBatchesPage = (props) => {
-  const { history } = props;
+  const history = useHistory();
   const classes = useStyles();
 
   const dispatch = useDispatch();
-  const [selectedPage, setSelectedPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const { results, page, totalResults } = useSelector((state) => state.batch);
-
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const [query, setQuery] = useState('');
+  const data = useSelector((state) => state.batch);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      dispatch(getBatches(selectedPage, limit, ""));
-    } else {
-      history.push("/login");
-    }
-  }, [history, isLoggedIn, dispatch, selectedPage, limit]);
-
-  const options = {
-    filterType: "checkbox",
-    count: totalResults,
-    page: page,
-    serverSide: true,
-    selectableRows: false,
-    onRowClick: (rowData, rowState) => {
-      history.push(`/batches/${rowData[0]}`);
-    },
-    onTableChange: (action, tableState) => {
-      switch (action) {
-        case "changePage":
-          setSelectedPage(tableState.page + 1);
-          break;
-        case "changeRowsPerPage":
-          setLimit(tableState.rowsPerPage);
-          setSelectedPage(1);
-          break;
-        case "search":
-          break;
-        default:
-          break;
-      }
-    },
-  };
+    dispatch(getBatches(query));
+  }, [dispatch, query]);
 
   return (
     <AdminLayout>
@@ -111,7 +64,7 @@ const AllBatchesPage = (props) => {
         </Grid>
         <Grid item>
           <Button
-            onClick={() => history.push("/batches/add-batch")}
+            onClick={() => history.push('/batches/add-batch')}
             variant="outlined"
             color="primary"
             size="small"
@@ -121,11 +74,14 @@ const AllBatchesPage = (props) => {
         </Grid>
       </Grid>
       <AdminBreadcrumbs path={history} />
-      <MUIDataTable
-        title={"Batches List"}
-        data={results}
+      <DataTable
+        title={'Batches List'}
+        data={data}
         columns={columns}
-        options={options}
+        setQuery={setQuery}
+        onEdit={(value) => {
+          history.push(`batches/${value}`);
+        }}
       />
     </AdminLayout>
   );

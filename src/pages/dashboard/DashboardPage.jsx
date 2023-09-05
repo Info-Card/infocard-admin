@@ -1,20 +1,18 @@
-import React, { useEffect } from "react";
-import AdminLayout from "../../components/AdminLayout/AdminLayout";
-import AdminBreadcrumbs from "../../components/AdminBreadcrumbs/AdminBreadcrumbs";
-import { useSelector } from "react-redux";
+import React, { useEffect } from 'react';
+import AdminLayout from '../../components/AdminLayout/AdminLayout';
+import AdminBreadcrumbs from '../../components/AdminBreadcrumbs/AdminBreadcrumbs';
+import { useSelector } from 'react-redux';
 
 const DashboardPage = (props) => {
   const { history } = props;
 
-  const auth = useSelector((state) => state.auth);
-  const { isLoggedIn } = auth;
+  const { user: authUser } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (isLoggedIn) {
-    } else {
-      history.push("/login");
+    if (!authUser) {
+      history.push('/login');
     }
-  }, [history, isLoggedIn]);
+  }, [history, authUser]);
 
   return (
     <AdminLayout>

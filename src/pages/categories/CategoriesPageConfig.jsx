@@ -1,6 +1,5 @@
 import AllCategoriesPage from './AllCategoriesPage';
 import AddCategoryPage from './AddCategoryPage';
-import UpdateCategoryPage from './UpdateCategoryPage';
 
 export const CategoriesPageConfig = {
   routes: [
@@ -17,7 +16,7 @@ export const CategoriesPageConfig = {
     {
       path: '/categories/:id',
       exact: true,
-      component: UpdateCategoryPage,
+      component: AddCategoryPage,
     },
   ],
 };

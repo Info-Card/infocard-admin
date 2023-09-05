@@ -5,6 +5,8 @@ import { Typography, Grid, makeStyles } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import * as types from 'state/ducks/category/types';
 import CategoryForm from './components/CategoryForm';
+import { getCategory } from 'state/ducks/category/actions';
+import AllPlatforms from './components/AllPlatforms';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,23 +21,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AddCategoryPage = (props) => {
-  const { history } = props;
+  const { history, match } = props;
+  const categoryId = match.params.id;
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const { success } = useSelector((state) => state.category);
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { success, details } = useSelector((state) => state.category);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      if (success) {
-        dispatch({ type: types.CATEGORY_RESET });
-        history.push('/categories');
-      }
-    } else {
-      history.push('/login');
+    if (success) {
+      dispatch({ type: types.CATEGORY_RESET });
+      history.push('/categories');
+    } else if (categoryId) {
+      dispatch(getCategory(categoryId));
     }
-  }, [dispatch, history, success, isLoggedIn]);
+  }, [dispatch, history, success, categoryId]);
 
   return (
     <AdminLayout>
@@ -48,7 +48,16 @@ const AddCategoryPage = (props) => {
       </Grid>
       <AdminBreadcrumbs path={history} />
       <div className={classes.root}>
-        <CategoryForm />
+        <CategoryForm preloadedValues={details} key={details} />
+        {details && (
+          <>
+            <AllPlatforms
+              platforms={details.platforms}
+              key={details}
+              categoryId={categoryId}
+            />
+          </>
+        )}
       </div>
     </AdminLayout>
   );

@@ -1,36 +1,20 @@
-import React, { useEffect } from "react";
-import { useHistory } from "react-router";
-import { Typography, Grid, Button, makeStyles } from "@material-ui/core";
-import MUIDataTable from "mui-datatables";
-import { getTags } from "state/ducks/tag/actions";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+import DataTable from "components/Table/DataTable";
+import { getTags } from "state/ducks/tag/actions";
+
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 
-const useStyles = makeStyles((theme) => ({
-  my3: {
-    margin: "1.3rem 0",
-  },
-  mb0: {
-    marginBottom: 0,
-  },
-  mRight: {
-    marginRight: ".85rem",
-  },
-  p1: {
-    padding: ".85rem",
-  },
-}));
-
 const AllTags = ({ batchId }) => {
-  const classes = useStyles();
-  const history = useHistory();
   const dispatch = useDispatch();
-  const { results } = useSelector((state) => state.tag);
+  const [query, setQuery] = useState("");
+  const data = useSelector((state) => state.tag);
 
   useEffect(() => {
-    dispatch(getTags(1, 999999999999, `&batch=${batchId}`));
-  }, [dispatch, batchId]);
+    dispatch(getTags(`${query}&batch=${batchId}`));
+  }, [dispatch, query, batchId]);
 
   const columns = [
     {
@@ -55,41 +39,16 @@ const AllTags = ({ batchId }) => {
       },
     },
   ];
-
-  const options = {
-    print: false,
-    filter: false,
-    viewColumns: false,
-    selectableRows: false,
-  };
-
   return (
-    <>
-      <Grid container className={classes.my3} alignItems="center">
-        <Grid item className={classes.mRight}>
-          <Typography variant="h5" component="h1">
-            Tags
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Button
-            onClick={() => history.push(`/tags/add-tag/${batchId}`)}
-            variant="outlined"
-            color="primary"
-            size="small"
-          >
-            Add Tag
-          </Button>
-        </Grid>
-      </Grid>
-
-      <MUIDataTable
+    <div style={{ marginTop: "20px" }}>
+      <DataTable
         title={"Tags List"}
-        data={results}
+        data={data}
         columns={columns}
-        options={options}
+        setQuery={setQuery}
+        download={true}
       />
-    </>
+    </div>
   );
 };
 

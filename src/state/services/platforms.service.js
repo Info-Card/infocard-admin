@@ -1,60 +1,60 @@
-import api from './api';
+import api from "./api";
 
 class PlatformService {
   getAll(page, limit) {
-    return api.get(`platforms?page=${page}&limit=${limit}`);
+    return api.get(`/v1/platforms?page=${page}&limit=${limit}`);
   }
 
   get(id) {
-    return api.get(`platforms/${id}`);
+    return api.get(`/v1/platforms/${id}`);
   }
 
   create(data) {
     const config = {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     };
 
     const formData = new FormData();
     Object.entries(data).forEach((entry) => {
       const [key, value] = entry;
-      if (key === 'image') {
+      if (key === "image") {
         if (value[0]) {
-          formData.append('image', value[0]);
+          formData.append("image", value[0]);
         }
       } else {
         formData.append(key, value);
       }
     });
 
-    return api.post('platforms/', formData, config);
+    return api.post("/v1/platforms/", formData, config);
   }
 
   update(id, data) {
     const config = {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     };
 
     const formData = new FormData();
     Object.entries(data).forEach((entry) => {
       const [key, value] = entry;
-      if (key === 'image') {
+      if (key === "image") {
         if (value[0]) {
-          formData.append('image', value[0]);
+          formData.append("image", value[0]);
         }
       } else {
         formData.append(key, value);
       }
     });
 
-    return api.patch(`platforms/${id}`, formData, config);
+    return api.patch(`/v1/platforms/${id}`, formData, config);
   }
 
   delete(id) {
-    return api.delete(`platforms/${id}`);
+    return api.delete(`/v1/platforms/${id}`);
   }
 }
 

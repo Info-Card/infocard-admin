@@ -5,6 +5,7 @@ import { Typography, Grid, makeStyles } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import * as types from 'state/ducks/user/types';
 import UserForm from './components/UserForm';
+import { getUser } from 'state/ducks/user/actions';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,36 +20,34 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AddUserPage = (props) => {
-  const { history } = props;
+  const { history, match } = props;
+  const userId = match.params.id;
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const { success } = useSelector((state) => state.user);
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { success, details } = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      if (success) {
-        dispatch({ type: types.USER_RESET });
-        history.push('/users');
-      }
-    } else {
-      history.push('/login');
+    if (success) {
+      dispatch({ type: types.USER_RESET });
+      history.push('/users');
+    } else if (userId) {
+      dispatch(getUser(userId));
     }
-  }, [dispatch, history, success, isLoggedIn]);
+  }, [dispatch, history, success, userId]);
 
   return (
     <AdminLayout>
       <Grid container className={classes.my3} alignItems="center">
         <Grid item className={classes.mRight}>
           <Typography variant="h5" component="h1">
-            Add New User
+            {userId ? 'Update User' : 'Add New User'}
           </Typography>
         </Grid>
       </Grid>
       <AdminBreadcrumbs path={history} />
       <div className={classes.root}>
-        <UserForm />
+        <UserForm preloadedValues={details} key={details} />
       </div>
     </AdminLayout>
   );

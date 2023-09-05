@@ -2,12 +2,12 @@ import * as types from './types';
 
 import TagService from 'state/services/tag.service';
 
-export const getTags = (page, limit, query) => async (dispatch) => {
+export const getTags = (query) => async (dispatch) => {
   try {
     dispatch({
       type: types.TAG_REQUEST,
     });
-    const res = await TagService.getAll(page, limit, query);
+    const res = await TagService.getAll(query);
 
     dispatch({
       type: types.GET_TAGS_SUCCESS,

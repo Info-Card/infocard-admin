@@ -1,4 +1,4 @@
-import * as types from './types';
+import * as types from "./types";
 
 const initialState = {};
 
@@ -30,7 +30,7 @@ export default (state = initialState, action) => {
     case types.GET_PLATFORM_SUCCESS:
       return {
         loading: false,
-        selectedPlatform: payload,
+        details: payload,
       };
     case types.PLATFORM_RESET:
       return {};

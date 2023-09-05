@@ -1,6 +1,6 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   Avatar,
   ListItem,
@@ -15,20 +15,20 @@ import {
   ClickAwayListener,
   ListItemIcon,
   Hidden,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import AdminAvatarBadge from "../AdminAvatarBadge/AdminAvatarBadge";
-import { ExitToApp } from "@material-ui/icons";
+import AdminAvatarBadge from '../AdminAvatarBadge/AdminAvatarBadge';
+import { AccountCircle, Settings, ExitToApp } from '@material-ui/icons';
 
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "state/ducks/auth/actions";
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from 'state/ducks/auth/actions';
 
 const useStyles = makeStyles((theme) => ({
   inline: {
-    display: "inline",
+    display: 'inline',
   },
   menuIcon: {
-    minWidth: "33px",
+    minWidth: '33px',
   },
   paddingRightZero: {
     paddingRight: 0,
@@ -64,7 +64,7 @@ const AdminAvatarMenu = (props) => {
       <ListItem
         button
         ref={anchorRef}
-        aria-controls={open ? "menu-list-grow" : undefined}
+        aria-controls={open ? 'menu-list-grow' : undefined}
         aria-haspopup="true"
         onClick={handleToggle}
         alignItems="flex-start"
@@ -74,8 +74,8 @@ const AdminAvatarMenu = (props) => {
           <AdminAvatarBadge
             overlap="circular"
             anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
+              vertical: 'bottom',
+              horizontal: 'right',
             }}
             variant="dot"
           >
@@ -118,12 +118,24 @@ const AdminAvatarMenu = (props) => {
             {...TransitionProps}
             style={{
               transformOrigin:
-                placement === "bottom" ? "center top" : "center bottom",
+                placement === 'bottom' ? 'center top' : 'center bottom',
             }}
           >
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList autoFocusItem={open} id="menu-list-grow">
+                  <MenuItem onClick={handleClose}>
+                    <ListItemIcon className={classes.menuIcon}>
+                      <AccountCircle fontSize="small" />
+                    </ListItemIcon>
+                    Profile
+                  </MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    <ListItemIcon className={classes.menuIcon}>
+                      <Settings fontSize="small" />
+                    </ListItemIcon>
+                    settings
+                  </MenuItem>
                   <MenuItem onClick={logoutHandler}>
                     <ListItemIcon className={classes.menuIcon}>
                       <ExitToApp fontSize="small" />

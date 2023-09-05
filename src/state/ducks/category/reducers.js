@@ -1,4 +1,4 @@
-import * as types from './types';
+import * as types from "./types";
 
 const initialState = {};
 
@@ -18,10 +18,7 @@ export default (state = initialState, action) => {
         error: payload,
       };
     case types.GET_CATEGORIES_SUCCESS:
-      return {
-        loading: false,
-        results: payload,
-      };
+      return { results: payload };
     case types.CREATE_CATEGORY_SUCCESS:
       return {
         loading: false,
@@ -33,9 +30,12 @@ export default (state = initialState, action) => {
         success: true,
       };
     case types.GET_CATEGORY_SUCCESS:
+      const platforms = payload.platforms.sort((a, b) => {
+        return a.position - b.position;
+      });
       return {
         loading: false,
-        selectedCategory: payload,
+        details: { ...payload, platforms },
       };
     case types.CATEGORY_RESET:
       return {};

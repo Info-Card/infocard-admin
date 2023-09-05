@@ -1,24 +1,24 @@
-import api from './api';
+import api from "./api";
 
 class CategoryService {
-  getAll(page, limit) {
-    return api.get(`categories?page=${page}&limit=${limit}`);
+  getAll(query) {
+    return api.get(`/v1/categories?${query}`);
   }
 
   get(id) {
-    return api.get(`categories/${id}`);
+    return api.get(`/v1/categories/${id}`);
   }
 
   create(data) {
-    return api.post('categories', data);
+    return api.post("/v1/categories", data);
   }
 
   update(id, data) {
-    return api.patch(`categories/${id}`, data);
+    return api.patch(`/v1/categories/${id}`, data);
   }
 
   delete(id) {
-    return api.delete(`categories/${id}`);
+    return api.delete(`/v1/categories/${id}`);
   }
 }
 

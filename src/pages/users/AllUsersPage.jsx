@@ -1,123 +1,58 @@
-import React, { useEffect, useState } from "react";
-import AdminLayout from "components/AdminLayout/AdminLayout";
-import AdminBreadcrumbs from "components/AdminBreadcrumbs/AdminBreadcrumbs";
-import { Typography, Grid, Button, makeStyles } from "@material-ui/core";
-import MUIDataTable from "mui-datatables";
-import { getUsers, deleteUser } from "state/ducks/user/actions";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import AdminLayout from 'components/AdminLayout/AdminLayout';
+import AdminBreadcrumbs from 'components/AdminBreadcrumbs/AdminBreadcrumbs';
+import { Typography, Grid, makeStyles } from '@material-ui/core';
+import { getUsers } from 'state/ducks/user/actions';
+import { useDispatch, useSelector } from 'react-redux';
 
-import CheckIcon from "@material-ui/icons/Check";
-import ClearIcon from "@material-ui/icons/Clear";
+import DataTable from 'components/Table/DataTable';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   my3: {
-    margin: "1.3rem 0",
+    margin: '1.3rem 0',
   },
   mb0: {
     marginBottom: 0,
   },
   mRight: {
-    marginRight: ".85rem",
+    marginRight: '.85rem',
   },
   p1: {
-    padding: ".85rem",
+    padding: '.85rem',
   },
 }));
 
 const columns = [
   {
-    name: "id",
-    label: "Id",
-    options: {
-      filter: true,
-      sort: true,
-    },
+    name: 'id',
+    label: 'Id',
   },
   {
-    name: "username",
-    label: "Name",
-    options: {
-      filter: true,
-      sort: false,
-    },
+    name: 'username',
+    label: 'Username',
   },
   {
-    name: "email",
-    label: "Email",
-    options: {
-      filter: true,
-      sort: false,
-    },
+    name: 'email',
+    label: 'Email',
   },
   {
-    name: "role",
-    label: "Role",
-    options: {
-      filter: true,
-      sort: false,
-    },
-  },
-  {
-    name: "isEmailVerified",
-    label: "Email Verified",
-    options: {
-      filter: false,
-      customBodyRender: (value, tableMeta, updateValue) => {
-        return <>{value === true ? <CheckIcon /> : <ClearIcon />}</>;
-      },
-    },
+    name: 'role',
+    label: 'Role',
   },
 ];
 
 const AllUsersPage = (props) => {
-  const { history } = props;
+  const history = useHistory();
   const classes = useStyles();
 
   const dispatch = useDispatch();
-  const [selectedPage, setSelectedPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const { results, page, totalResults } = useSelector((state) => state.user);
-
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const [query, setQuery] = useState('');
+  const data = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      dispatch(getUsers(selectedPage, limit, ""));
-    } else {
-      history.push("/login");
-    }
-  }, [history, isLoggedIn, dispatch, selectedPage, limit]);
-
-  const options = {
-    filterType: "checkbox",
-    count: totalResults,
-    page: page,
-    serverSide: true,
-    onRowsDelete: (rowsDeleted, dataRows) => {
-      rowsDeleted.data.forEach((row) => {
-        dispatch(deleteUser(results[row.dataIndex].id));
-      });
-    },
-    onRowClick: (rowData, rowState) => {
-      console.log(rowData);
-      history.push(`/users/${rowData[0]}`);
-    },
-    onTableChange: (action, tableState) => {
-      switch (action) {
-        case "changePage":
-          setSelectedPage(tableState.page + 1);
-          break;
-        case "changeRowsPerPage":
-          setLimit(tableState.rowsPerPage);
-          setSelectedPage(1);
-          break;
-        case "search":
-          break;
-        default:
-          break;
-      }
-    },
-  };
+    dispatch(getUsers(query));
+  }, [dispatch, query]);
 
   return (
     <AdminLayout>
@@ -127,23 +62,16 @@ const AllUsersPage = (props) => {
             Users
           </Typography>
         </Grid>
-        <Grid item>
-          <Button
-            onClick={() => history.push("/users/add-user")}
-            variant="outlined"
-            color="primary"
-            size="small"
-          >
-            Add User
-          </Button>
-        </Grid>
       </Grid>
       <AdminBreadcrumbs path={history} />
-      <MUIDataTable
-        title={"Users List"}
-        data={results}
+      <DataTable
+        title={'Users List'}
+        data={data}
         columns={columns}
-        options={options}
+        setQuery={setQuery}
+        onEdit={(value) => {
+          history.push(`users/${value}`);
+        }}
       />
     </AdminLayout>
   );
