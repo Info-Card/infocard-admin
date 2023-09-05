@@ -2,12 +2,12 @@ import * as types from './types';
 
 import BatchService from '../../services/batches.service';
 
-export const getBatches = (page, limit) => async (dispatch) => {
+export const getBatches = (query) => async (dispatch) => {
   try {
     dispatch({
       type: types.BATCH_REQUEST,
     });
-    const res = await BatchService.getAll(page, limit);
+    const res = await BatchService.getAll(query);
 
     dispatch({
       type: types.GET_BATCHES_SUCCESS,

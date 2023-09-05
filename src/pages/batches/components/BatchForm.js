@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Form from 'components/Form/Form';
 import Input from 'components/Input/Input';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,7 +6,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
-import { Grid, makeStyles, Button, MenuItem } from '@material-ui/core';
+import { Grid, makeStyles, Button } from '@material-ui/core';
 import { createBatch, updateBatch } from 'state/ducks/batch/actions';
 import Loader from 'components/Loader/Loader';
 import Message from 'components/Message/Message';
@@ -38,7 +38,6 @@ const BatchForm = ({ preloadedValues }) => {
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors },
   } = useForm({
     defaultValues: preloadedValues,

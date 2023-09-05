@@ -2,12 +2,12 @@ import * as types from './types';
 
 import UserService from '../../services/user.service';
 
-export const getUsers = (page, limit) => async (dispatch) => {
+export const getUsers = (query) => async (dispatch) => {
   try {
     dispatch({
       type: types.USER_REQUEST,
     });
-    const res = await UserService.getAll(page, limit);
+    const res = await UserService.getAll(query);
 
     dispatch({
       type: types.GET_USERS_SUCCESS,

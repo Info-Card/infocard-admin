@@ -35,7 +35,7 @@ export default (state = initialState, action) => {
     case types.GET_USER_SUCCESS:
       return {
         loading: false,
-        selectedUser: payload,
+        details: payload,
       };
     case types.USER_RESET:
       return {};

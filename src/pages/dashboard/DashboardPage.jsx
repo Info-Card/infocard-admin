@@ -6,15 +6,13 @@ import { useSelector } from 'react-redux';
 const DashboardPage = (props) => {
   const { history } = props;
 
-  const auth = useSelector((state) => state.auth);
-  const { isLoggedIn, user } = auth;
+  const { user: authUser } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (isLoggedIn) {
-    } else {
+    if (!authUser) {
       history.push('/login');
     }
-  }, [history, user]);
+  }, [history, authUser]);
 
   return (
     <AdminLayout>

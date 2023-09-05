@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import AdminLayout from 'components/AdminLayout/AdminLayout';
 import AdminBreadcrumbs from 'components/AdminBreadcrumbs/AdminBreadcrumbs';
 import { Typography, Grid, Button, makeStyles } from '@material-ui/core';
-import MUIDataTable from 'mui-datatables';
-import { getCategories, deleteCategory } from 'state/ducks/category/actions';
+import { getCategories, moveCategory } from 'state/ducks/category/actions';
 import { useDispatch, useSelector } from 'react-redux';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import DataTable from 'components/Table/DataTable';
+import * as types from 'state/ducks/category/types';
 
 const useStyles = makeStyles((theme) => ({
   my3: {
@@ -21,76 +24,56 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const columns = [
-  {
-    name: 'id',
-    label: 'Id',
-    options: {
-      filter: true,
-      sort: true,
-    },
-  },
-  {
-    name: 'name',
-    label: 'Name',
-    options: {
-      filter: true,
-      sort: false,
-    },
-  },
-];
-
 const AllCategoriesPage = (props) => {
   const { history } = props;
   const classes = useStyles();
 
   const dispatch = useDispatch();
-  const [selectedPage, setSelectedPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [search, setSearch] = useState('');
-  const { results, page, totalResults } = useSelector(
-    (state) => state.category
-  );
-
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const [query, setQuery] = useState('');
+  const data = useSelector((state) => state.category);
+  const { results, success } = data;
 
   useEffect(() => {
-    if (isLoggedIn) {
-      dispatch(getCategories(selectedPage, limit, search));
+    if (success) {
+      dispatch({ type: types.CATEGORY_RESET });
     } else {
-      history.push('/login');
+      dispatch(getCategories(query));
     }
-  }, [history, isLoggedIn, dispatch, selectedPage]);
+  }, [dispatch, query, success]);
 
-  const options = {
-    filterType: 'checkbox',
-    count: totalResults,
-    page: page,
-    serverSide: true,
-    onRowsDelete: (rowsDeleted, dataRows) => {
-      rowsDeleted.data.forEach((row) => {
-        dispatch(deleteCategory(results[row.dataIndex].id));
-      });
+  const columns = [
+    {
+      name: 'id',
+      label: 'Id',
     },
-    onRowClick: (rowData, rowState) => {
-      history.push(`/categories/${rowData[0]}`);
+    {
+      name: 'name',
+      label: 'Name',
     },
-    onTableChange: (action, tableState) => {
-      switch (action) {
-        case 'changePage':
-          setSelectedPage(tableState.page + 1);
-          break;
-        case 'changeRowsPerPage':
-          setLimit(tableState.rowsPerPage);
-          setSelectedPage(1);
-          break;
-        case 'search':
-          break;
-        default:
-          break;
-      }
+    {
+      name: 'position',
+      label: 'Move',
+      options: {
+        customBodyRender: (value, tableMeta, updateValue) => {
+          const { rowIndex } = tableMeta;
+          return (
+            <>
+              <KeyboardArrowDownIcon
+                onClick={() => {
+                  dispatch(moveCategory(results, rowIndex, rowIndex + 1));
+                }}
+              />
+              <KeyboardArrowUpIcon
+                onClick={() => {
+                  dispatch(moveCategory(results, rowIndex, rowIndex - 1));
+                }}
+              />
+            </>
+          );
+        },
+      },
     },
-  };
+  ];
 
   return (
     <AdminLayout>
@@ -112,11 +95,15 @@ const AllCategoriesPage = (props) => {
         </Grid>
       </Grid>
       <AdminBreadcrumbs path={history} />
-      <MUIDataTable
+
+      <DataTable
         title={'Categories List'}
-        data={results}
+        data={data}
         columns={columns}
-        options={options}
+        setQuery={setQuery}
+        onEdit={(value) => {
+          history.push(`categories/${value}`);
+        }}
       />
     </AdminLayout>
   );

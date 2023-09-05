@@ -5,6 +5,8 @@ import { Typography, Grid, makeStyles } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import * as types from 'state/ducks/batch/types';
 import BatchForm from './components/BatchForm';
+import { getBatch } from 'state/ducks/batch/actions';
+import AllTags from './components/AllTags';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,23 +21,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AddBatchPage = (props) => {
-  const { history } = props;
+  const { history, match } = props;
+  const batchId = match.params.id;
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const { success } = useSelector((state) => state.batch);
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { success, details } = useSelector((state) => state.batch);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      if (success) {
-        dispatch({ type: types.BATCH_RESET });
-        history.push('/batches');
-      }
-    } else {
-      history.push('/login');
+    if (success) {
+      dispatch({ type: types.BATCH_RESET });
+      history.push('/batches');
+    } else if (batchId) {
+      dispatch(getBatch(batchId));
     }
-  }, [dispatch, history, success, isLoggedIn]);
+  }, [dispatch, history, success, batchId]);
 
   return (
     <AdminLayout>
@@ -48,7 +48,12 @@ const AddBatchPage = (props) => {
       </Grid>
       <AdminBreadcrumbs path={history} />
       <div className={classes.root}>
-        <BatchForm />
+        <BatchForm preloadedValues={details} key={details} />
+        {details && (
+          <>
+            <AllTags batchId={batchId} />
+          </>
+        )}
       </div>
     </AdminLayout>
   );

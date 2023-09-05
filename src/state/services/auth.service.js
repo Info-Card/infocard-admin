@@ -1,14 +1,14 @@
-import api from './api';
-import TokenService from './token.service';
+import api from "./api";
+import TokenService from "./token.service";
 
 class AuthService {
   login(creadentials) {
-    return api.post('auth/login', creadentials).then((response) => {
-      if (response.data && response.data.user.role === 'admin') {
+    return api.post("/v1/auth/login", creadentials).then((response) => {
+      if (response.data && response.data.user.role === "admin") {
         TokenService.setAuthInfo(response.data);
         return response.data;
       } else {
-        throw new Error('unauthorized');
+        throw new Error("unauthorized");
       }
     });
   }

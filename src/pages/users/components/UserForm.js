@@ -8,16 +8,13 @@ import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import { Grid, makeStyles, Button, MenuItem } from '@material-ui/core';
-import { createUser, updateUser } from 'state/ducks/user/actions';
+import { updateUser } from 'state/ducks/user/actions';
 import Loader from 'components/Loader/Loader';
 import Message from 'components/Message/Message';
 
 const schema = yup.object().shape({
-  email: yup
-    .string()
-    .email()
-    .required(),
-  password: yup.string().required(),
+  email: yup.string().email().required(),
+  password: yup.string(),
   username: yup.string().required(),
   role: yup.string().required(),
 });
@@ -54,8 +51,6 @@ const UserForm = ({ preloadedValues }) => {
   const onSubmit = (data) => {
     if (preloadedValues) {
       dispatch(updateUser(preloadedValues.id, data));
-    } else {
-      dispatch(createUser(data));
     }
   };
 

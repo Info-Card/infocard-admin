@@ -1,24 +1,27 @@
-import api from './api';
+import api from "./api";
 
 class UserService {
-  getAll(page, limit) {
-    return api.get(`users?page=${page}&limit=${limit}`);
+  getAll(query) {
+    return api.get(`/v1/users?${query}`);
   }
 
   get(id) {
-    return api.get(`users/${id}`);
+    return api.get(`/v1/users/${id}`);
   }
 
   create(data) {
-    return api.post('users', data);
+    return api.post("/v1/users", data);
   }
 
   update(id, data) {
-    return api.patch(`users/${id}`, data);
+    if (data.password === "") {
+      delete data.password;
+    }
+    return api.patch(`/v1/users/${id}`, data);
   }
 
   delete(id) {
-    return api.delete(`users/${id}`);
+    return api.delete(`/v1/users/${id}`);
   }
 
   // deleteAll() {

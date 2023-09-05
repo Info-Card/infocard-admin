@@ -32,7 +32,7 @@ export default (state = initialState, action) => {
     case types.GET_BATCH_SUCCESS:
       return {
         loading: false,
-        selectedBatch: payload,
+        details: payload,
       };
     case types.BATCH_RESET:
       return {};

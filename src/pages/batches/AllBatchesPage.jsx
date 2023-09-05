@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import AdminLayout from 'components/AdminLayout/AdminLayout';
 import AdminBreadcrumbs from 'components/AdminBreadcrumbs/AdminBreadcrumbs';
-import { Typography, Grid, Button, makeStyles } from '@material-ui/core';
-import MUIDataTable from 'mui-datatables';
-import { getBatches, deleteBatch } from 'state/ducks/batch/actions';
+import { Typography, Grid, makeStyles, Button } from '@material-ui/core';
+import { getBatches } from 'state/ducks/batch/actions';
 import { useDispatch, useSelector } from 'react-redux';
 
-const useStyles = makeStyles((theme) => ({
+import DataTable from 'components/Table/DataTable';
+
+const useStyles = makeStyles(() => ({
   my3: {
     margin: '1.3rem 0',
   },
@@ -25,82 +27,32 @@ const columns = [
   {
     name: 'id',
     label: 'Id',
-    options: {
-      filter: true,
-      sort: true,
-    },
   },
   {
     name: 'name',
     label: 'Name',
-    options: {
-      filter: true,
-      sort: false,
-    },
   },
   {
     name: 'description',
     label: 'Description',
-    options: {
-      filter: true,
-      sort: false,
-    },
   },
   {
     name: 'createdAt',
     label: 'Created At',
-    options: {
-      filter: true,
-      sort: false,
-    },
   },
 ];
 
 const AllBatchesPage = (props) => {
-  const { history } = props;
+  const history = useHistory();
   const classes = useStyles();
 
   const dispatch = useDispatch();
-  const [selectedPage, setSelectedPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [search, setSearch] = useState('');
-  const { results, page, totalResults } = useSelector((state) => state.batch);
-
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const [query, setQuery] = useState('');
+  const data = useSelector((state) => state.batch);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      dispatch(getBatches(selectedPage, limit, search));
-    } else {
-      history.push('/login');
-    }
-  }, [history, isLoggedIn, dispatch, selectedPage]);
-
-  const options = {
-    filterType: 'checkbox',
-    count: totalResults,
-    page: page,
-    serverSide: true,
-    selectableRows: false,
-    onRowClick: (rowData, rowState) => {
-      history.push(`/batches/${rowData[0]}`);
-    },
-    onTableChange: (action, tableState) => {
-      switch (action) {
-        case 'changePage':
-          setSelectedPage(tableState.page + 1);
-          break;
-        case 'changeRowsPerPage':
-          setLimit(tableState.rowsPerPage);
-          setSelectedPage(1);
-          break;
-        case 'search':
-          break;
-        default:
-          break;
-      }
-    },
-  };
+    dispatch(getBatches(query));
+  }, [dispatch, query]);
 
   return (
     <AdminLayout>
@@ -122,11 +74,14 @@ const AllBatchesPage = (props) => {
         </Grid>
       </Grid>
       <AdminBreadcrumbs path={history} />
-      <MUIDataTable
+      <DataTable
         title={'Batches List'}
-        data={results}
+        data={data}
         columns={columns}
-        options={options}
+        setQuery={setQuery}
+        onEdit={(value) => {
+          history.push(`batches/${value}`);
+        }}
       />
     </AdminLayout>
   );
