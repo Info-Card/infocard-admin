@@ -37,7 +37,8 @@ const useStyles = makeStyles((theme) => ({
   loginCard: {
     width: "275px",
     borderRadius: 5,
-    background: "#fff",
+    color: theme.palette.type === "dark" ? "#fff" : "#000",
+    background: theme.palette.background.paper,
     padding: ".85rem",
   },
 }));
