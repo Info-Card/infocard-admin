@@ -6,6 +6,7 @@ import { getTags } from "state/ducks/tag/actions";
 
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
+import Button from "@material-ui/core/Button";
 
 const AllTags = ({ batchId }) => {
   const dispatch = useDispatch();
@@ -35,6 +36,18 @@ const AllTags = ({ batchId }) => {
         download: false,
         customBodyRender: (value) => {
           return <>{value !== undefined ? <CheckIcon /> : <ClearIcon />}</>;
+        },
+      },
+    },
+    {
+      name: "actions",
+      label: "Actions",
+      options: {
+        filter: false,
+        sort: false,
+        download: false,
+        customBodyRender: () => {
+          return <Button variant="contained">Deactivate</Button>;
         },
       },
     },
