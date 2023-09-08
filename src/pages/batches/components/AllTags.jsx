@@ -7,15 +7,22 @@ import { getTags } from "state/ducks/tag/actions";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import Button from "@material-ui/core/Button";
+import { AddTagModal } from "./AddTagModal";
 
 const AllTags = ({ batchId }) => {
   const dispatch = useDispatch();
   const [query, setQuery] = useState("");
   const data = useSelector((state) => state.tag);
 
+  const [showTagModal, setShowTagModal] = useState(false);
+
   useEffect(() => {
     dispatch(getTags(`${query}&batch=${batchId}`));
   }, [dispatch, query, batchId]);
+  const handleLinksLength = () => {
+    console.log("Add Tag button clicked");
+    setShowTagModal(true);
+  };
 
   const columns = [
     {
@@ -47,7 +54,11 @@ const AllTags = ({ batchId }) => {
         sort: false,
         download: false,
         customBodyRender: () => {
-          return <Button variant="contained">Deactivate</Button>;
+          return (
+            <Button variant="contained" style={{ height: "30px" }}>
+              Deactivate
+            </Button>
+          );
         },
       },
     },
@@ -65,7 +76,11 @@ const AllTags = ({ batchId }) => {
     return (
       <div style={titleStyle}>
         <span>Tags List</span>
-        <Button variant="contained" style={buttonStyle}>
+        <Button
+          variant="contained"
+          style={buttonStyle}
+          onClick={handleLinksLength}
+        >
           Add Tag
         </Button>
         <Button variant="contained" style={buttonStyle}>
@@ -84,6 +99,7 @@ const AllTags = ({ batchId }) => {
         setQuery={setQuery}
         download={true}
       />
+      <AddTagModal show={showTagModal} setShow={setShowTagModal} />
     </div>
   );
 };
