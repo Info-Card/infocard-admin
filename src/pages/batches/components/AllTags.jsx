@@ -33,12 +33,13 @@ const AllTags = ({ batchId }) => {
         filter: false,
         sort: false,
         download: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
+        customBodyRender: (value) => {
           return <>{value !== undefined ? <CheckIcon /> : <ClearIcon />}</>;
         },
       },
     },
   ];
+
   return (
     <div style={{ marginTop: "20px" }}>
       <DataTable

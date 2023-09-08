@@ -1,26 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import AdminLayout from 'components/AdminLayout/AdminLayout';
-import AdminBreadcrumbs from 'components/AdminBreadcrumbs/AdminBreadcrumbs';
-import { Typography, Grid, Button, makeStyles } from '@material-ui/core';
-import { getCategories, moveCategory } from 'state/ducks/category/actions';
-import { useDispatch, useSelector } from 'react-redux';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import DataTable from 'components/Table/DataTable';
-import * as types from 'state/ducks/category/types';
+import React, { useEffect, useState } from "react";
+import AdminLayout from "components/AdminLayout/AdminLayout";
+import AdminBreadcrumbs from "components/AdminBreadcrumbs/AdminBreadcrumbs";
+import { Typography, Grid, Button, makeStyles } from "@material-ui/core";
+import { getCategories } from "state/ducks/category/actions";
+import { useDispatch, useSelector } from "react-redux";
+import DataTable from "components/Table/DataTable";
+import * as types from "state/ducks/category/types";
 
 const useStyles = makeStyles((theme) => ({
   my3: {
-    margin: '1.3rem 0',
+    margin: "1.3rem 0",
   },
   mb0: {
     marginBottom: 0,
   },
   mRight: {
-    marginRight: '.85rem',
+    marginRight: ".85rem",
   },
   p1: {
-    padding: '.85rem',
+    padding: ".85rem",
   },
 }));
 
@@ -29,9 +27,9 @@ const AllCategoriesPage = (props) => {
   const classes = useStyles();
 
   const dispatch = useDispatch();
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const data = useSelector((state) => state.category);
-  const { results, success } = data;
+  const { success } = data;
 
   useEffect(() => {
     if (success) {
@@ -43,36 +41,36 @@ const AllCategoriesPage = (props) => {
 
   const columns = [
     {
-      name: 'id',
-      label: 'Id',
+      name: "id",
+      label: "Id",
     },
     {
-      name: 'name',
-      label: 'Name',
+      name: "name",
+      label: "Name",
     },
-    {
-      name: 'position',
-      label: 'Move',
-      options: {
-        customBodyRender: (value, tableMeta, updateValue) => {
-          const { rowIndex } = tableMeta;
-          return (
-            <>
-              <KeyboardArrowDownIcon
-                onClick={() => {
-                  dispatch(moveCategory(results, rowIndex, rowIndex + 1));
-                }}
-              />
-              <KeyboardArrowUpIcon
-                onClick={() => {
-                  dispatch(moveCategory(results, rowIndex, rowIndex - 1));
-                }}
-              />
-            </>
-          );
-        },
-      },
-    },
+    // {
+    //   name: "position",
+    //   label: "Move",
+    //   options: {
+    //     customBodyRender: (value, tableMeta, updateValue) => {
+    //       const { rowIndex } = tableMeta;
+    //       return (
+    //         <>
+    //           <KeyboardArrowDownIcon
+    //             onClick={() => {
+    //               dispatch(moveCategory(results, rowIndex, rowIndex + 1));
+    //             }}
+    //           />
+    //           <KeyboardArrowUpIcon
+    //             onClick={() => {
+    //               dispatch(moveCategory(results, rowIndex, rowIndex - 1));
+    //             }}
+    //           />
+    //         </>
+    //       );
+    //     },
+    //   },
+    // },
   ];
 
   return (
@@ -85,7 +83,7 @@ const AllCategoriesPage = (props) => {
         </Grid>
         <Grid item>
           <Button
-            onClick={() => history.push('/categories/add-category')}
+            onClick={() => history.push("/categories/add-category")}
             variant="outlined"
             color="primary"
             size="small"
@@ -97,7 +95,7 @@ const AllCategoriesPage = (props) => {
       <AdminBreadcrumbs path={history} />
 
       <DataTable
-        title={'Categories List'}
+        title={"Categories List"}
         data={data}
         columns={columns}
         setQuery={setQuery}
