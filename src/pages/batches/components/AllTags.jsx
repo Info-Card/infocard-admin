@@ -52,11 +52,33 @@ const AllTags = ({ batchId }) => {
       },
     },
   ];
+  const CustomTitle = () => {
+    const titleStyle = {
+      display: "flex",
+      alignItems: "center",
+    };
+
+    const buttonStyle = {
+      marginLeft: "10px", // Adjust the margin as needed
+    };
+
+    return (
+      <div style={titleStyle}>
+        <span>Tags List</span>
+        <Button variant="contained" style={buttonStyle}>
+          Add Tag
+        </Button>
+        <Button variant="contained" style={buttonStyle}>
+          Export
+        </Button>
+      </div>
+    );
+  };
 
   return (
     <div style={{ marginTop: "20px" }}>
       <DataTable
-        title={"Tags List"}
+        title={<CustomTitle />}
         data={data}
         columns={columns}
         setQuery={setQuery}
