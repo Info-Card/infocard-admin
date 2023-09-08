@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MUIDataTable from "mui-datatables";
 import { debounce } from "lodash";
 import { buildURLQuery } from "helpers/buildURLQuery";
@@ -11,11 +11,49 @@ const DataTable = (props) => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
+  const [isBatchScreen, setBatchScreen] = useState(false);
 
   const debouncedSearch = debounce(async (text) => {
     setSearch(text == null ? "" : text);
     setQuery(buildURLQuery({ page, limit, search: text == null ? "" : text }));
   }, 1000);
+
+  useEffect(() => {
+    setBatchScreen(window.location.href.endsWith("batches"));
+  }, []);
+  const tableColumns = isBatchScreen
+    ? columns.concat({
+        name: "id",
+        label: "Actions",
+        options: {
+          download: false,
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return (
+              <>
+                {onEdit && (
+                  <span
+                    onClick={() => {
+                      onEdit(value);
+                    }}
+                  >
+                    <EditIcon />
+                  </span>
+                )}
+                {onDelete && (
+                  <span
+                    onClick={() => {
+                      onDelete(value);
+                    }}
+                  >
+                    <DeleteIcon style={{ color: "red" }} />
+                  </span>
+                )}
+              </>
+            );
+          },
+        },
+      })
+    : columns;
 
   const options = {
     count: data.totalResults,
@@ -50,41 +88,12 @@ const DataTable = (props) => {
       }
     },
   };
+
   return (
     <MUIDataTable
       title={title}
       data={data.results}
-      columns={columns.concat({
-        name: "id",
-        label: "Actions",
-        options: {
-          download: false,
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return (
-              <>
-                {onEdit && (
-                  <span
-                    onClick={() => {
-                      onEdit(value);
-                    }}
-                  >
-                    <EditIcon />
-                  </span>
-                )}
-                {onDelete && (
-                  <span
-                    onClick={() => {
-                      onDelete(value);
-                    }}
-                  >
-                    <DeleteIcon style={{ color: "red" }} />
-                  </span>
-                )}
-              </>
-            );
-          },
-        },
-      })}
+      columns={tableColumns}
       options={options}
     />
   );
