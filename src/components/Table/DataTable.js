@@ -15,7 +15,7 @@ const DataTable = (props) => {
 
   useEffect(() => {
     if (data && data.results) {
-      setDisablePagination(data.results.length > 10);
+      setDisablePagination(data.results.length < 10);
     }
   }, [data]);
 
@@ -27,7 +27,7 @@ const DataTable = (props) => {
   const options = {
     count: data.totalResults,
     page: page - 1,
-    serverSide: !disablePagination, // Enable server-side pagination unless disabled
+    serverSide: !disablePagination,
     filter: false,
     columns: false,
     print: false,
