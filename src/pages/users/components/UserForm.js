@@ -21,7 +21,8 @@ const schema = yup.object().shape({
     .matches(
       /^[a-zA-Z0-9_]+$/,
       "Username can only contain alphabets, numbers, and underscores"
-    ),
+    )
+    .max(12, "Username must be at most 12 characters"),
   role: yup.string().required(),
 });
 
