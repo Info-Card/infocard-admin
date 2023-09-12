@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import MUIDataTable from "mui-datatables";
 import { debounce } from "lodash";
 import { buildURLQuery } from "helpers/buildURLQuery";
@@ -11,13 +11,6 @@ const DataTable = (props) => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
-  const [disablePagination, setDisablePagination] = useState(false);
-
-  useEffect(() => {
-    if (data && data.results) {
-      setDisablePagination(data.results.length < 10);
-    }
-  }, [data]);
 
   const debouncedSearch = debounce(async (text) => {
     setSearch(text == null ? "" : text);
@@ -27,7 +20,7 @@ const DataTable = (props) => {
   const options = {
     count: data.totalResults,
     page: page - 1,
-    serverSide: !disablePagination,
+    serverSide: true,
     filter: false,
     columns: false,
     print: false,
