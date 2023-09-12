@@ -36,12 +36,12 @@ export const AddTagModal = ({ show, setShow }) => {
   return (
     <Modal show={show} onHide={() => setShow(false)}>
       <Modal.Header closeButton>
-        <Modal.Title>Add Custom Link</Modal.Title>
+        <Modal.Title>Add Custom Tag</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Form.Group controlId="tag">
-            <Form.Label>Title</Form.Label>
+            <Form.Label>Tag</Form.Label>
             <Form.Control {...register("tag")} placeholder="tag" type="text" />
             <p className="validation-color">{errors.tag?.message}</p>
           </Form.Group>

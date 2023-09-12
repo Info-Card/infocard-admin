@@ -19,7 +19,8 @@ const AllTags = ({ batchId }) => {
   useEffect(() => {
     dispatch(getTags(`${query}&batch=${batchId}`));
   }, [dispatch, query, batchId]);
-  const handleLinksLength = () => {
+
+  const handleAddTag = () => {
     console.log("Add Tag button clicked");
     setShowTagModal(true);
   };
@@ -76,11 +77,7 @@ const AllTags = ({ batchId }) => {
     return (
       <div style={titleStyle}>
         <span>Tags List</span>
-        <Button
-          variant="contained"
-          style={buttonStyle}
-          onClick={handleLinksLength}
-        >
+        <Button variant="contained" style={buttonStyle} onClick={handleAddTag}>
           Add Tag
         </Button>
         <Button variant="contained" style={buttonStyle}>
