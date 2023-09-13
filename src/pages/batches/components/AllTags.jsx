@@ -43,9 +43,8 @@ const AllTags = ({ batchId }) => {
   };
 
   const onSubmit = (formData) => {
-    // Handle form submission here
     console.log(formData);
-    closeModal(); // Close the modal after submission
+    closeModal();
   };
 
   useEffect(() => {
@@ -165,30 +164,6 @@ const AllTags = ({ batchId }) => {
                   </div>
                 </Grid>
               </Grid>
-              {/* <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Add Tag"
-                    variant="outlined"
-                  />
-                </Grid>
-
-                <Grid item xs={12}>
-                  <div style={{ margin: "16px 0" }}>
-                    <Button
-                      variant="contained"
-                      onClick={closeModal}
-                      style={{ marginRight: "10px", buttonStyle }}
-                    >
-                      Close
-                    </Button>
-                    <Button variant="contained" type="submit">
-                      Save
-                    </Button>
-                  </div>
-                </Grid>
-              </Grid> */}
             </Form>
           </div>
         </Modal>
@@ -205,7 +180,6 @@ const AllTags = ({ batchId }) => {
         setQuery={setQuery}
         download={true}
       />
-      {/* <AddTagModal show={showTagModal} setShow={setShowTagModal} /> */}
     </div>
   );
 };
