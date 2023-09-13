@@ -32,7 +32,6 @@ const useStyles = makeStyles((theme) => ({
 
 const BatchForm = ({ preloadedValues }) => {
   const classes = useStyles();
-
   const dispatch = useDispatch();
   const { error, loading } = useSelector((state) => state.batch);
   const {
