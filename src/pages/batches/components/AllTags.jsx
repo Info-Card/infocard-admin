@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers";
 
 import DataTable from "components/Table/DataTable";
 import { getTags } from "state/ducks/tag/actions";
-
+import Swal from "sweetalert2";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import Button from "@material-ui/core/Button";
@@ -29,6 +29,7 @@ const AllTags = ({ batchId }) => {
     handleSubmit,
     control,
     formState: { errors },
+    reset, // Add reset function from react-hook-form
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -40,11 +41,28 @@ const AllTags = ({ batchId }) => {
 
   const closeModal = () => {
     setModalIsOpen(false);
+    reset(); // Reset form fields when closing the modal
   };
 
   const onSubmit = (formData) => {
     console.log(formData);
     closeModal();
+  };
+  const handleDeactivate = () => {
+    console.log("ok");
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Deactivite it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire("Deactivite!", "Your file has been deleted.", "success");
+      }
+    });
   };
 
   useEffect(() => {
@@ -82,7 +100,11 @@ const AllTags = ({ batchId }) => {
         download: false,
         customBodyRender: () => {
           return (
-            <Button variant="contained" style={{ height: "30px" }}>
+            <Button
+              onClick={handleDeactivate}
+              variant="contained"
+              style={{ height: "30px" }}
+            >
               Deactivate
             </Button>
           );
@@ -90,6 +112,7 @@ const AllTags = ({ batchId }) => {
       },
     },
   ];
+
   const CustomTitle = () => {
     const titleStyle = {
       display: "flex",
