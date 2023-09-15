@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers";
-
 import DataTable from "components/Table/DataTable";
-import { getTags } from "state/ducks/tag/actions";
+import { createTag, getTags } from "state/ducks/tag/actions";
 import Swal from "sweetalert2";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import Button from "@material-ui/core/Button";
 import Modal from "react-modal";
 import { Form } from "react-bootstrap";
-import { Grid, TextField } from "@material-ui/core";
+import { Input } from "@material-ui/core";
 
 const schema = yup.object().shape({
-  tag: yup.string().required("Tag is required"),
+  tag: yup
+    .string()
+    .required("Tag is required")
+    .max(24, "Tag must be at most 24 characters"),
 });
 
 const AllTags = ({ batchId }) => {
@@ -26,10 +28,11 @@ const AllTags = ({ batchId }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const {
+    register,
     handleSubmit,
-    control,
     formState: { errors },
-    reset, // Add reset function from react-hook-form
+    reset,
+    setValue,
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -40,16 +43,19 @@ const AllTags = ({ batchId }) => {
   };
 
   const closeModal = () => {
+    console.log("Closing modal");
     setModalIsOpen(false);
-    reset(); // Reset form fields when closing the modal
+    reset();
   };
 
   const onSubmit = (formData) => {
-    console.log(formData);
+    dispatch(createTag(formData));
+    setModalIsOpen(false);
+    reset();
     closeModal();
   };
+
   const handleDeactivate = () => {
-    console.log("ok");
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -189,47 +195,38 @@ const AllTags = ({ batchId }) => {
         >
           <div style={{ marginTop: "10px", textAlign: "center" }}>
             <h2>Add new Tag</h2>
-            <Form onSubmit={handleSubmit(onSubmit)}>
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  <Controller
-                    name="tag"
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        id="outlined-basic"
-                        label="Add Tag"
-                        variant="outlined"
-                        error={!!errors.tag}
-                        helperText={errors.tag?.message}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <div style={{ margin: "16px 0" }}>
-                    <Button
-                      variant="contained"
-                      onClick={closeModal}
-                      style={{ marginRight: "10px" }}
-                    >
-                      Close
-                    </Button>
-                    <Button variant="contained" type="submit">
-                      Save
-                    </Button>
-                  </div>
-                </Grid>
-              </Grid>
+            <Form onSubmit={handleSubmit(onSubmit)} noValidate>
+              <Form.Group controlId="tag">
+                <Input
+                  id="outlined-basic"
+                  variant="outlined"
+                  {...register("tag")}
+                  placeholder="tag"
+                  type="text"
+                  defaultValue=""
+                />
+                <p className="validation-color">{errors.tag?.message}</p>
+              </Form.Group>
+              <Button
+                type="submit"
+                style={{ marginRight: "10px" }}
+                variant="contained"
+              >
+                Add
+              </Button>
+              <Button
+                variant="contained"
+                onClick={closeModal}
+                style={{ marginRight: "10px" }}
+              >
+                Close
+              </Button>
             </Form>
           </div>
         </Modal>
       </div>
     );
   };
-
   return (
     <div style={{ marginTop: "20px" }}>
       <DataTable
