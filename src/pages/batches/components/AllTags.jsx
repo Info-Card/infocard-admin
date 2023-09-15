@@ -60,7 +60,23 @@ const AllTags = ({ batchId }) => {
       confirmButtonText: "Yes, Deactivite it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire("Deactivite!", "Your file has been deleted.", "success");
+        Swal.fire("Deactivite!", "Your Tag has been deactivated.", "success");
+      }
+    });
+  };
+  const handleDelete = () => {
+    console.log("ok");
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Delete!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire("Delete!", "Your file has been deleted.", "success");
       }
     });
   };
@@ -106,6 +122,26 @@ const AllTags = ({ batchId }) => {
               style={{ height: "30px" }}
             >
               Deactivate
+            </Button>
+          );
+        },
+      },
+    },
+    {
+      name: "actions",
+      label: "Actions",
+      options: {
+        filter: false,
+        sort: false,
+        download: false,
+        customBodyRender: () => {
+          return (
+            <Button
+              onClick={handleDelete}
+              variant="contained"
+              style={{ height: "30px" }}
+            >
+              Delete
             </Button>
           );
         },
