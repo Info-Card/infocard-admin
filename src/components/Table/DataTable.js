@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MUIDataTable from "mui-datatables";
 import { debounce } from "lodash";
 import { buildURLQuery } from "helpers/buildURLQuery";
@@ -11,11 +11,24 @@ const DataTable = (props) => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
+  const [linkId, setLinkId] = useState("");
+
+  useEffect(() => {
+    if (linkId) {
+      setQuery(buildURLQuery({ page, limit, search: linkId }));
+    }
+  }, [linkId, page, limit, setQuery]);
 
   const debouncedSearch = debounce(async (text) => {
     setSearch(text == null ? "" : text);
     setQuery(buildURLQuery({ page, limit, search: text == null ? "" : text }));
   }, 1000);
+
+  const extractIdFromLink = (link) => {
+    console.log(link);
+    const url = new URL(link);
+    return url.pathname.split("/").pop();
+  };
 
   const options = {
     count: data.totalResults,
@@ -43,7 +56,14 @@ const DataTable = (props) => {
           );
           break;
         case "search":
-          debouncedSearch(tableState.searchText);
+          const searchText = tableState.searchText;
+          if (searchText && searchText.startsWith("https://app.infocard.me/")) {
+            const extractedId = extractIdFromLink(searchText);
+            debouncedSearch(extractedId);
+            setLinkId(extractedId);
+          } else {
+            setLinkId("");
+          }
           break;
         default:
           break;

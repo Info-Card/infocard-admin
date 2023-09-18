@@ -7,7 +7,6 @@ import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import Button from "@material-ui/core/Button";
 import AddTagModal from "./AddTagModal";
-import { Modal } from "@material-ui/core";
 
 const AllTags = ({ batchId }) => {
   const dispatch = useDispatch();
