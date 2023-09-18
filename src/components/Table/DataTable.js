@@ -4,6 +4,7 @@ import { debounce } from "lodash";
 import { buildURLQuery } from "helpers/buildURLQuery";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import Swal from "sweetalert2";
 
 const DataTable = (props) => {
   const { title, data, columns, setQuery, onEdit, onDelete, download } = props;
@@ -12,6 +13,24 @@ const DataTable = (props) => {
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
   const [linkId, setLinkId] = useState("");
+
+  const handleDelete = (value) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Delete!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Call the onDelete function when the user confirms the deletion
+        onDelete(value);
+        Swal.fire("Delete!", "Your file has been deleted.", "success");
+      }
+    });
+  };
 
   useEffect(() => {
     if (linkId) {
@@ -95,7 +114,8 @@ const DataTable = (props) => {
                 {onDelete && (
                   <span
                     onClick={() => {
-                      onDelete(value);
+                      // Call handleDelete with the value to be deleted
+                      handleDelete(value);
                     }}
                   >
                     <DeleteIcon style={{ color: "red" }} />
