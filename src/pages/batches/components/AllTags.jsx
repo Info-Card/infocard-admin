@@ -121,6 +121,7 @@ const AllTags = ({ batchId }) => {
         >
           Add Tag
         </Button>
+
         <Button variant="contained" style={buttonStyle}>
           Export
         </Button>

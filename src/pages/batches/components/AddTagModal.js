@@ -4,7 +4,7 @@ import React from "react";
 import SaveIcon from "@material-ui/icons/Save";
 import Loader from "components/Loader/Loader";
 import * as yup from "yup";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form"; // Import Controller
 import { yupResolver } from "@hookform/resolvers";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "components/Message/Message";
@@ -17,7 +17,7 @@ const AddTagModal = ({ show, setShow }) => {
   const dispatch = useDispatch();
   const { error, loading } = useSelector((state) => state.tag);
   const {
-    register,
+    control, // Use control from useForm
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -34,21 +34,26 @@ const AddTagModal = ({ show, setShow }) => {
   };
 
   return (
-    <Modal open={show} onCLose={handleClose} contentLabel="Example Modal">
+    <Modal open={show} onClose={handleClose} contentLabel="Example Modal">
       <div style={{ marginTop: "10px", textAlign: "center" }}>
         <h2>Add new Tag</h2>
         <Form onSubmit={handleSubmit(onSubmit)}>
           {error && <Message severity="error">{error}</Message>}
           <Grid container spacing={3}>
             <Grid item xs={4}>
-              <Input
-                ref={register}
-                id="customId"
-                type="text"
-                label="Custom Id"
+              <Controller
                 name="customId"
-                error={!!errors.customId}
-                helperText={errors?.customId?.message}
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    type="text"
+                    label="Custom Id"
+                    error={!!errors.customId}
+                    helperText={errors?.customId?.message}
+                  />
+                )}
               />
             </Grid>
             <Grid item xs={12}>
