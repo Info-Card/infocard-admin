@@ -7,13 +7,43 @@ import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import Button from "@material-ui/core/Button";
 import AddTagModal from "./AddTagModal";
+import { Grid, Input, Modal } from "@material-ui/core";
+import * as yup from "yup";
+import { useForm, Controller } from "react-hook-form"; // Import Controller
+import { yupResolver } from "@hookform/resolvers";
+import Message from "components/Message/Message";
+import Loader from "components/Loader/Loader";
+import Form from "components/Form/Form";
+import SaveIcon from "@material-ui/icons/Save";
+
+const schema = yup.object().shape({
+  customId: yup.string().required(),
+});
 
 const AllTags = ({ batchId }) => {
   const dispatch = useDispatch();
   const [query, setQuery] = useState("");
   const data = useSelector((state) => state.tag);
 
+  const { error, loading } = useSelector((state) => state.tag);
+  const {
+    control, // Use control from useForm
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: "onBlur",
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
   const [showAddTagModal, setShowAddTagModal] = useState(false);
+
+  const handleClose = () => {
+    setShowAddTagModal(false);
+  };
 
   const handleDeactivate = (tagId) => {
     Swal.fire({
@@ -23,11 +53,11 @@ const AllTags = ({ batchId }) => {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Deactivite it!",
+      confirmButtonText: "Yes, Deactivate it!",
     }).then((result) => {
       if (result.isConfirmed) {
         console.log(tagId);
-        Swal.fire("Deactivite!", "Your Tag has been deactivated.", "success");
+        Swal.fire("Deactivate!", "Your Tag has been deactivated.", "success");
       }
     });
   };
@@ -128,6 +158,7 @@ const AllTags = ({ batchId }) => {
       </div>
     );
   };
+
   return (
     <div style={{ marginTop: "20px" }}>
       <DataTable
@@ -143,7 +174,62 @@ const AllTags = ({ batchId }) => {
           // }
         }}
       />
-      <AddTagModal show={showAddTagModal} setShow={setShowAddTagModal} />
+      <Modal
+        open={showAddTagModal}
+        onClose={handleClose}
+        aria-labelledby="Add Tag Modal"
+      >
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "white",
+            height: "300px", // Adjust the height as needed
+            width: "500px", // Adjust the width as needed
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center", // Center vertically
+            alignItems: "center", // Center horizontally
+          }}
+        >
+          <h2>Add new Tag</h2>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            {error && <Message severity="error">{error}</Message>}
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Controller
+                  name="customId"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      type="text"
+                      label="Custom Id"
+                      error={!!errors.customId}
+                      helperText={errors?.customId?.message}
+                      variant="outlined"
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  size="large"
+                  endIcon={<SaveIcon />}
+                >
+                  {loading ? <Loader /> : "Save Tag"}
+                </Button>
+              </Grid>
+            </Grid>
+          </Form>
+        </div>
+      </Modal>
     </div>
   );
 };
