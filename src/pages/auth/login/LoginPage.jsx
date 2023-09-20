@@ -7,7 +7,7 @@ import { useData } from "../../../context/DataContext";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers";
 import Form from "../../../components/Form/Form";
-import Input from "../../../components/Input/Input";
+import CustomField from "components/Input/CustomField";
 import Message from "../../../components/Message/Message";
 import Loader from "../../../components/Loader/Loader";
 import { login } from "state/ducks/auth/actions";
@@ -89,7 +89,7 @@ const LoginPage = (props) => {
         </Typography>
         <Form onSubmit={handleSubmit(onSubmit)}>
           {message && <Message severity="error">{message}</Message>}
-          <Input
+          <CustomField
             ref={register}
             id="email"
             type="text"
@@ -98,7 +98,7 @@ const LoginPage = (props) => {
             error={!!errors.email}
             helperText={errors?.email?.message}
           />
-          <Input
+          <CustomField
             ref={register}
             id="password"
             type="password"

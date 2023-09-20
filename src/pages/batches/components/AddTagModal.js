@@ -1,57 +1,27 @@
 import {
-  Box,
   Button,
-  Card,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Grid,
-  Input,
-  Modal,
-  makeStyles,
 } from "@material-ui/core";
 import Form from "components/Form/Form";
 import React from "react";
 import SaveIcon from "@material-ui/icons/Save";
 import Loader from "components/Loader/Loader";
 import * as yup from "yup";
-import { useForm, Controller } from "react-hook-form"; // Import Controller
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "components/Message/Message";
+import CustomField from "components/Input/CustomField";
+import { createTag } from "state/ducks/tag/actions";
 
 const schema = yup.object().shape({
   customId: yup.string().required("This field is required"),
 });
 
-const useStyles = makeStyles((theme) => ({
-  mBottom: {
-    display: "flex",
-    justifyContent: "center",
-  },
-  button: {
-    padding: "10px",
-  },
-  textField: {
-    width: "100%",
-  },
-  modal: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  paper: {
-    position: "absolute",
-    width: "100%",
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
-}));
-
-const AddTagModal = ({ show, setShow, preloadedValues }) => {
-  const classes = useStyles();
+const AddTagModal = ({ show, setShow, preloadedValues, id }) => {
   const dispatch = useDispatch();
   const { error, loading } = useSelector((state) => state.tag);
   const {
@@ -65,7 +35,9 @@ const AddTagModal = ({ show, setShow, preloadedValues }) => {
   });
 
   const onSubmit = (data) => {
-    console.log(data);
+    const updatedData = { ...data, batch: id };
+    console.log(updatedData);
+    dispatch(createTag(updatedData));
   };
 
   const handleClose = () => {
@@ -73,17 +45,16 @@ const AddTagModal = ({ show, setShow, preloadedValues }) => {
   };
 
   return (
-    <Dialog open={show} onClose={handleClose}>
+    <Dialog open={show} onClose={handleClose} fullWidth>
       <DialogTitle>Add new Tag</DialogTitle>
       <DialogContent>
         <Form onSubmit={handleSubmit(onSubmit)}>
           {error && <Message severity="error">{error}</Message>}
-
-          <Input
+          <CustomField
             ref={register}
             id="customId"
             type="text"
-            label="Name"
+            label="Custom Id"
             name="customId"
             error={!!errors.customId}
             helperText={errors?.customId?.message}

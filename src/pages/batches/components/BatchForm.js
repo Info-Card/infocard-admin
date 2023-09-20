@@ -1,6 +1,6 @@
 import React from "react";
 import Form from "components/Form/Form";
-import Input from "components/Input/Input";
+import CustomField from "components/Input/CustomField";
 import { useDispatch, useSelector } from "react-redux";
 import SaveIcon from "@material-ui/icons/Save";
 import * as yup from "yup";
@@ -59,7 +59,7 @@ const BatchForm = ({ preloadedValues }) => {
 
       <Grid container spacing={3}>
         <Grid item xs={4}>
-          <Input
+          <CustomField
             ref={register}
             id="name"
             type="text"
@@ -70,7 +70,7 @@ const BatchForm = ({ preloadedValues }) => {
           />
         </Grid>
         <Grid item xs={4}>
-          <Input
+          <CustomField
             ref={register}
             id="description"
             type="text"
@@ -84,7 +84,7 @@ const BatchForm = ({ preloadedValues }) => {
           <></>
         ) : (
           <Grid item xs={4}>
-            <Input
+            <CustomField
               ref={register}
               id="quantity"
               type="text"

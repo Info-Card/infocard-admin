@@ -1,6 +1,6 @@
 import React from "react";
 import Form from "components/Form/Form";
-import Input from "components/Input/Input";
+import CustomField from "components/Input/CustomField";
 import { useDispatch, useSelector } from "react-redux";
 import SaveIcon from "@material-ui/icons/Save";
 import SelectInput from "components/Input/SelectInput";
@@ -66,7 +66,7 @@ const UserForm = ({ preloadedValues }) => {
 
       <Grid container spacing={3}>
         <Grid item xs={4}>
-          <Input
+          <CustomField
             ref={register}
             id="username"
             type="text"
@@ -77,7 +77,7 @@ const UserForm = ({ preloadedValues }) => {
           />
         </Grid>
         <Grid item xs={4}>
-          <Input
+          <CustomField
             ref={register}
             id="email"
             type="text"
@@ -89,7 +89,7 @@ const UserForm = ({ preloadedValues }) => {
           />
         </Grid>
         <Grid item xs={4}>
-          <Input
+          <CustomField
             ref={register}
             id="password"
             type="password"

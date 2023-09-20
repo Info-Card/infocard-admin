@@ -151,7 +151,11 @@ const AllTags = ({ batchId }) => {
           }
         }}
       />
-      <AddTagModal show={showAddTagModal} setShow={setShowAddTagModal} />
+      <AddTagModal
+        show={showAddTagModal}
+        id={batchId}
+        setShow={setShowAddTagModal}
+      />
     </div>
   );
 };
