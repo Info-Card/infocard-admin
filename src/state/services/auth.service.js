@@ -1,21 +1,27 @@
-import api from "./api";
-import TokenService from "./token.service";
+import ApiService from "./ApiService";
+import TokenService from "./TokenService";
 
-class AuthService {
+class AuthService extends ApiService {
+  /**
+   * Logs in a user with the given email and password.
+   * @param {string} email - The email of the user to login.
+   * @param {string} password - The password of the user to login.
+   * @returns {Promise} A promise that resolves with the server response data.
+   */
   login(creadentials) {
-    return api.post("/v1/auth/login", creadentials).then((response) => {
-      if (response.data && response.data.user.role === "admin") {
-        TokenService.setAuthInfo(response.data);
-        return response.data;
-      } else {
-        throw new Error("unauthorized");
-      }
-    });
-  }
-
-  logout() {
-    TokenService.removeAuthInfo();
+    return this.instance
+      .post(`/v1/auth/login`, creadentials)
+      .then((response) => {
+        if (response.data && response.data.user.role === "admin") {
+          TokenService.setAuthInfo(response.data);
+          return response.data;
+        } else {
+          throw new Error("unauthorized");
+        }
+      });
   }
 }
 
-export default new AuthService();
+const authService = new AuthService();
+
+export default authService;

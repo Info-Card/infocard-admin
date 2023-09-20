@@ -7,44 +7,16 @@ import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import Button from "@material-ui/core/Button";
 import AddTagModal from "./AddTagModal";
-import { Grid, Input, Modal } from "@material-ui/core";
-import * as yup from "yup";
-import { useForm, Controller } from "react-hook-form"; // Import Controller
-import { yupResolver } from "@hookform/resolvers";
-import Message from "components/Message/Message";
-import Loader from "components/Loader/Loader";
-import Form from "components/Form/Form";
-import SaveIcon from "@material-ui/icons/Save";
-import { deletePlatform } from "state/ducks/platform/actions";
-
-const schema = yup.object().shape({
-  customId: yup.string().required(),
-});
+import userService from "state/services/user.service";
 
 const AllTags = ({ batchId }) => {
   const dispatch = useDispatch();
   const [query, setQuery] = useState("");
   const data = useSelector((state) => state.tag);
 
-  const { error, loading } = useSelector((state) => state.tag);
-  const {
-    control, // Use control from useForm
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    mode: "onBlur",
-    resolver: yupResolver(schema),
-  });
-
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+  const { loading } = useSelector((state) => state.tag);
 
   const [showAddTagModal, setShowAddTagModal] = useState(false);
-
-  const handleClose = () => {
-    setShowAddTagModal(false);
-  };
 
   const handleDeactivate = (tagId) => {
     Swal.fire({
@@ -78,6 +50,24 @@ const AllTags = ({ batchId }) => {
         Swal.fire("Delete!", "Your file has been deleted.", "success");
       }
     });
+  };
+
+  const exportCsv = async () => {
+    try {
+      const response = await userService.exportCsv();
+
+      const blob = new Blob([response.data], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.style.display = "none";
+      a.href = url;
+      a.download = "users.csv";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error exporting CSV:", error);
+    }
   };
 
   useEffect(() => {
@@ -153,7 +143,11 @@ const AllTags = ({ batchId }) => {
           Add Tag
         </Button>
 
-        <Button variant="contained" style={buttonStyle}>
+        <Button
+          variant="contained"
+          style={buttonStyle}
+          onClick={exportCsv} // Attach the exportCsv function to the Export button
+        >
           Export
         </Button>
       </div>

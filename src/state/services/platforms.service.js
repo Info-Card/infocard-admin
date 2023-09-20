@@ -1,12 +1,12 @@
-import api from "./api";
+import ApiService from "./ApiService";
 
-class PlatformService {
+class PlatformService extends ApiService {
   getAll(page, limit) {
-    return api.get(`/v1/platforms?page=${page}&limit=${limit}`);
+    return this.instance.get(`/v1/platforms?page=${page}&limit=${limit}`);
   }
 
   get(id) {
-    return api.get(`/v1/platforms/${id}`);
+    return this.instance.get(`/v1/platforms/${id}`);
   }
 
   create(data) {
@@ -28,7 +28,7 @@ class PlatformService {
       }
     });
 
-    return api.post("/v1/platforms/", formData, config);
+    return this.instance.post("/v1/platforms/", formData, config);
   }
 
   update(id, data) {
@@ -50,11 +50,11 @@ class PlatformService {
       }
     });
 
-    return api.patch(`/v1/platforms/${id}`, formData, config);
+    return this.instance.patch(`/v1/platforms/${id}`, formData, config);
   }
 
   delete(id) {
-    return api.delete(`/v1/platforms/${id}`);
+    return this.instance.delete(`/v1/platforms/${id}`);
   }
 }
 

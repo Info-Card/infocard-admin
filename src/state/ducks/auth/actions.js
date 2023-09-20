@@ -1,6 +1,6 @@
-import * as types from './types';
+import * as types from "./types";
 
-import AuthService from '../../services/auth.service';
+import AuthService from "../../services/auth.service";
 
 export const login = (creadentials) => (dispatch) => {
   return AuthService.login(creadentials).then(

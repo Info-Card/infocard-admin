@@ -1,24 +1,24 @@
-import api from "./api";
+import ApiService from "./ApiService";
 
-class TagService {
+class TagService extends ApiService {
   getAll(query) {
-    return api.get(`/v1/tags?${query}`);
+    return this.instance.get(`/v1/tags?${query}`);
   }
 
   // get(id) {
-  //   return api.get(`tags/${id}`);
+  //   return this.instance.get(`tags/${id}`);
   // }
 
   create(data) {
-    return api.post("/v1/tags", data);
+    return this.instance.post("/v1/tags", data);
   }
 
   update(id, data) {
-    return api.patch(`/v1/tags/${id}`, data);
+    return this.instance.patch(`/v1/tags/${id}`, data);
   }
 
   delete(id) {
-    return api.delete(`/v1/tags/${id}`);
+    return this.instance.delete(`/v1/tags/${id}`);
   }
 }
 
