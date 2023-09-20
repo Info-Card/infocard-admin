@@ -7,7 +7,7 @@ import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import Button from "@material-ui/core/Button";
 import AddTagModal from "./AddTagModal";
-import userService from "state/services/user.service";
+import TagService from "state/services/tag.service";
 
 const AllTags = ({ batchId }) => {
   const dispatch = useDispatch();
@@ -35,26 +35,9 @@ const AllTags = ({ batchId }) => {
     });
   };
 
-  const handleDelete = () => {
-    console.log("ok");
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Delete!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire("Delete!", "Your file has been deleted.", "success");
-      }
-    });
-  };
-
   const exportCsv = async () => {
     try {
-      const response = await userService.exportCsv();
+      const response = await TagService.exportCsv(batchId);
 
       const blob = new Blob([response.data], { type: "text/csv" });
       const url = window.URL.createObjectURL(blob);

@@ -20,6 +20,10 @@ class TagService extends ApiService {
   delete(id) {
     return this.instance.delete(`/v1/tags/${id}`);
   }
+
+  exportCsv(batchId) {
+    return this.instance.get(`/v1/tags/export-csv/${batchId}`);
+  }
 }
 
 export default new TagService();

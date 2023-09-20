@@ -24,9 +24,9 @@ class UserService extends ApiService {
     return this.instance.delete(`/v1/users/${id}`);
   }
 
-  // deleteAll() {
-  //   return http.delete(`/tutorials`);
-  // }
+  exportCsv() {
+    return this.instance.get(`/v1/users/csv`);
+  }
 
   // findByTitle(title) {
   //   return http.get(`/tutorials?title=${title}`);
