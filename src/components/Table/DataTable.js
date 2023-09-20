@@ -25,9 +25,8 @@ const DataTable = (props) => {
       confirmButtonText: "Yes, Delete!",
     }).then((result) => {
       if (result.isConfirmed) {
-        // Call the onDelete function when the user confirms the deletion
-        onDelete(value);
         Swal.fire("Delete!", "Your file has been deleted.", "success");
+        onDelete(value);
       }
     });
   };
@@ -114,7 +113,6 @@ const DataTable = (props) => {
                 {onDelete && (
                   <span
                     onClick={() => {
-                      // Call handleDelete with the value to be deleted
                       handleDelete(value);
                     }}
                   >

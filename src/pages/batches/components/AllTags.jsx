@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DataTable from "components/Table/DataTable";
-import { getTags } from "state/ducks/tag/actions";
+import { deleteTag, getTags } from "state/ducks/tag/actions";
 import Swal from "sweetalert2";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
@@ -15,6 +15,7 @@ import Message from "components/Message/Message";
 import Loader from "components/Loader/Loader";
 import Form from "components/Form/Form";
 import SaveIcon from "@material-ui/icons/Save";
+import { deletePlatform } from "state/ducks/platform/actions";
 
 const schema = yup.object().shape({
   customId: yup.string().required(),
@@ -166,70 +167,14 @@ const AllTags = ({ batchId }) => {
         data={data}
         columns={columns}
         setQuery={setQuery}
-        download={true}
         onDelete={(value) => {
           console.log(value);
-          // if (!loading) {
-          //   dispatch(deletePlatform(value));
-          // }
+          if (!loading) {
+            dispatch(deleteTag(value));
+          }
         }}
       />
-      <Modal
-        open={showAddTagModal}
-        onClose={handleClose}
-        aria-labelledby="Add Tag Modal"
-      >
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            backgroundColor: "white",
-            height: "300px", // Adjust the height as needed
-            width: "500px", // Adjust the width as needed
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center", // Center vertically
-            alignItems: "center", // Center horizontally
-          }}
-        >
-          <h2>Add new Tag</h2>
-          <Form onSubmit={handleSubmit(onSubmit)}>
-            {error && <Message severity="error">{error}</Message>}
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Controller
-                  name="customId"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      type="text"
-                      label="Custom Id"
-                      error={!!errors.customId}
-                      helperText={errors?.customId?.message}
-                      variant="outlined"
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                  size="large"
-                  endIcon={<SaveIcon />}
-                >
-                  {loading ? <Loader /> : "Save Tag"}
-                </Button>
-              </Grid>
-            </Grid>
-          </Form>
-        </div>
-      </Modal>
+      <AddTagModal show={showAddTagModal} setShow={setShowAddTagModal} />
     </div>
   );
 };

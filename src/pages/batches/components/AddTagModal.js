@@ -1,4 +1,16 @@
-import { Button, Grid, Input, Modal } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  Card,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Input,
+  Modal,
+  makeStyles,
+} from "@material-ui/core";
 import Form from "components/Form/Form";
 import React from "react";
 import SaveIcon from "@material-ui/icons/Save";
@@ -10,17 +22,44 @@ import { useDispatch, useSelector } from "react-redux";
 import Message from "components/Message/Message";
 
 const schema = yup.object().shape({
-  customId: yup.string().required(),
+  customId: yup.string().required("This field is required"),
 });
 
-const AddTagModal = ({ show, setShow }) => {
+const useStyles = makeStyles((theme) => ({
+  mBottom: {
+    display: "flex",
+    justifyContent: "center",
+  },
+  button: {
+    padding: "10px",
+  },
+  textField: {
+    width: "100%",
+  },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    position: "absolute",
+    width: "100%",
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+}));
+
+const AddTagModal = ({ show, setShow, preloadedValues }) => {
+  const classes = useStyles();
   const dispatch = useDispatch();
   const { error, loading } = useSelector((state) => state.tag);
   const {
-    control, // Use control from useForm
+    register,
     handleSubmit,
     formState: { errors },
   } = useForm({
+    defaultValues: preloadedValues,
     mode: "onBlur",
     resolver: yupResolver(schema),
   });
@@ -34,43 +73,42 @@ const AddTagModal = ({ show, setShow }) => {
   };
 
   return (
-    <Modal open={show} onClose={handleClose} contentLabel="Example Modal">
-      <div style={{ marginTop: "10px", textAlign: "center" }}>
-        <h2>Add new Tag</h2>
+    <Dialog open={show} onClose={handleClose}>
+      <DialogTitle>Add new Tag</DialogTitle>
+      <DialogContent>
         <Form onSubmit={handleSubmit(onSubmit)}>
           {error && <Message severity="error">{error}</Message>}
-          <Grid container spacing={3}>
-            <Grid item xs={4}>
-              <Controller
-                name="customId"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    type="text"
-                    label="Custom Id"
-                    error={!!errors.customId}
-                    helperText={errors?.customId?.message}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                size="large"
-                endIcon={<SaveIcon />}
-              >
-                {loading ? <Loader /> : "Save Tag"}
-              </Button>
-            </Grid>
-          </Grid>
+
+          <Input
+            ref={register}
+            id="customId"
+            type="text"
+            label="Name"
+            name="customId"
+            error={!!errors.customId}
+            helperText={errors?.customId?.message}
+          />
+          <DialogActions>
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              size="large"
+              endIcon={<SaveIcon />}
+              style={{ marginLeft: "8px" }}
+            >
+              {loading ? (
+                <Loader />
+              ) : preloadedValues ? (
+                "Update Tag"
+              ) : (
+                "Save Tag"
+              )}
+            </Button>
+          </DialogActions>
         </Form>
-      </div>
-    </Modal>
+      </DialogContent>
+    </Dialog>
   );
 };
 
