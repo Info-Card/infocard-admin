@@ -36,8 +36,8 @@ const AddTagModal = ({ show, setShow, preloadedValues, id }) => {
 
   const onSubmit = (data) => {
     const updatedData = { ...data, batch: id };
-    console.log(updatedData);
     dispatch(createTag(updatedData));
+    window.location.reload();
   };
 
   const handleClose = () => {
