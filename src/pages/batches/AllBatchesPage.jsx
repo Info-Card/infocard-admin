@@ -1,44 +1,44 @@
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import AdminLayout from "components/AdminLayout/AdminLayout";
-import AdminBreadcrumbs from "components/AdminBreadcrumbs/AdminBreadcrumbs";
-import { Typography, Grid, makeStyles, Button } from "@material-ui/core";
-import { getBatches } from "state/ducks/batch/actions";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import AdminLayout from 'components/AdminLayout/AdminLayout';
+import AdminBreadcrumbs from 'components/AdminBreadcrumbs/AdminBreadcrumbs';
+import { Typography, Grid, makeStyles, Button } from '@material-ui/core';
+import { getBatches } from 'state/ducks/batch/actions';
+import { useDispatch, useSelector } from 'react-redux';
 
-import DataTable from "components/Table/DataTable";
+import DataTable from 'components/Table/DataTable';
 
 const useStyles = makeStyles(() => ({
   my3: {
-    margin: "1.3rem 0",
+    margin: '1.3rem 0',
   },
   mb0: {
     marginBottom: 0,
   },
   mRight: {
-    marginRight: ".85rem",
+    marginRight: '.85rem',
   },
   p1: {
-    padding: ".85rem",
+    padding: '.85rem',
   },
 }));
 
 const columns = [
   {
-    name: "id",
-    label: "Id",
+    name: 'id',
+    label: 'Id',
   },
   {
-    name: "name",
-    label: "Name",
+    name: 'name',
+    label: 'Name',
   },
   {
-    name: "description",
-    label: "Description",
+    name: 'description',
+    label: 'Description',
   },
   {
-    name: "createdAt",
-    label: "Created At",
+    name: 'createdAt',
+    label: 'Created At',
   },
 ];
 
@@ -47,7 +47,7 @@ const AllBatchesPage = (props) => {
   const classes = useStyles();
 
   const dispatch = useDispatch();
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const data = useSelector((state) => state.batch);
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const AllBatchesPage = (props) => {
         </Grid>
         <Grid item>
           <Button
-            onClick={() => history.push("/batches/add-batch")}
+            onClick={() => history.push('/batches/add-batch')}
             variant="outlined"
             color="primary"
             size="small"
@@ -75,7 +75,7 @@ const AllBatchesPage = (props) => {
       </Grid>
       <AdminBreadcrumbs path={history} />
       <DataTable
-        title={"Batches List"}
+        title={'Batches List'}
         data={data}
         columns={columns}
         setQuery={setQuery}

@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles, Avatar } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import { deletePlatform, getPlatform } from "state/ducks/platform/actions";
+import {
+  deletePlatform,
+  getPlatform,
+  movePlatform,
+} from "state/ducks/platform/actions";
+
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import DataTable from "components/Table/DataTable";
 import PlatformForm from "./PlatformForm";
 import * as types from "state/ducks/platform/types";
@@ -73,6 +80,32 @@ const AllPlatforms = ({ platforms, categoryId }) => {
       options: {
         filter: true,
         sort: false,
+      },
+    },
+    {
+      name: "position",
+      label: "Move",
+      options: {
+        filter: false,
+        sort: false,
+        download: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          const { rowIndex } = tableMeta;
+          return (
+            <>
+              <KeyboardArrowDownIcon
+                onClick={() => {
+                  dispatch(movePlatform(platforms, rowIndex, rowIndex + 1));
+                }}
+              />
+              <KeyboardArrowUpIcon
+                onClick={() => {
+                  dispatch(movePlatform(platforms, rowIndex, rowIndex - 1));
+                }}
+              />
+            </>
+          );
+        },
       },
     },
   ];

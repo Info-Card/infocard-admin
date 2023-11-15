@@ -1,4 +1,4 @@
-# InfoCard React Admin
+# Info Card Admin
 
 ## React
 

@@ -1,16 +1,16 @@
-import React, { useEffect } from "react";
-import { makeStyles, Typography, Button } from "@material-ui/core";
+import React, { useEffect } from 'react';
+import { makeStyles, Typography, Button } from '@material-ui/core';
 
-import { useDispatch, useSelector } from "react-redux";
-import * as yup from "yup";
-import { useData } from "../../../context/DataContext";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers";
-import Form from "../../../components/Form/Form";
-import CustomField from "components/Input/CustomField";
-import Message from "../../../components/Message/Message";
-import Loader from "../../../components/Loader/Loader";
-import { login } from "state/ducks/auth/actions";
+import { useDispatch, useSelector } from 'react-redux';
+import * as yup from 'yup';
+import { useData } from '../../../context/DataContext';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers';
+import Form from '../../../components/Form/Form';
+import Input from '../../../components/Input/Input';
+import Message from '../../../components/Message/Message';
+import Loader from '../../../components/Loader/Loader';
+import { login } from 'state/ducks/auth/actions';
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -19,27 +19,26 @@ const schema = yup.object().shape({
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    background: "#0d131d",
-    width: "100vw",
-    height: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    flexDirection: "column",
-    alignItems: "center",
-    textAlign: "center",
+    background: '#0d131d',
+    width: '100vw',
+    height: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    alignItems: 'center',
+    textAlign: 'center',
   },
   mBottom: {
-    marginBottom: ".5rem",
+    marginBottom: '.5rem',
   },
   button: {
-    marginTop: ".85rem",
+    marginTop: '.85rem',
   },
   loginCard: {
-    width: "275px",
+    width: '275px',
     borderRadius: 5,
-    color: theme.palette.type === "dark" ? "#fff" : "#000",
-    background: theme.palette.background.paper,
-    padding: ".85rem",
+    background: '#fff',
+    padding: '.85rem',
   },
 }));
 
@@ -56,11 +55,13 @@ const LoginPage = (props) => {
     loading,
   } = useSelector((state) => state.auth);
 
-  const redirect = location.search ? location.search.split("=")[1] : "/";
+  const redirect = location.search
+    ? location.search.split('=')[1]
+    : '/';
 
   const { register, handleSubmit, errors } = useForm({
     defaultValues: { email: data.email, password: data.password },
-    mode: "onBlur",
+    mode: 'onBlur',
     resolver: yupResolver(schema),
   });
 
@@ -89,7 +90,7 @@ const LoginPage = (props) => {
         </Typography>
         <Form onSubmit={handleSubmit(onSubmit)}>
           {message && <Message severity="error">{message}</Message>}
-          <CustomField
+          <Input
             ref={register}
             id="email"
             type="text"
@@ -98,7 +99,7 @@ const LoginPage = (props) => {
             error={!!errors.email}
             helperText={errors?.email?.message}
           />
-          <CustomField
+          <Input
             ref={register}
             id="password"
             type="password"
@@ -116,11 +117,13 @@ const LoginPage = (props) => {
               fullWidth
               className={classes.button}
             >
-              {loading ? <Loader /> : "Login"}
+              {loading ? <Loader /> : 'Login'}
             </Button>
           </div>
         </Form>
-        <Typography variant="caption">&copy; Info Card | Admin</Typography>
+        <Typography variant="caption">
+          &copy; Info Card | Admin
+        </Typography>
       </div>
     </div>
   );

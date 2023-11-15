@@ -1,40 +1,34 @@
-import React from "react";
-import Form from "components/Form/Form";
-import CustomField from "components/Input/CustomField";
-import { useDispatch, useSelector } from "react-redux";
-import SaveIcon from "@material-ui/icons/Save";
-import SelectInput from "components/Input/SelectInput";
-import * as yup from "yup";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers";
-import { Grid, makeStyles, Button, MenuItem } from "@material-ui/core";
-import { updateUser } from "state/ducks/user/actions";
-import Loader from "components/Loader/Loader";
-import Message from "components/Message/Message";
+import React from 'react';
+import Form from 'components/Form/Form';
+import Input from 'components/Input/Input';
+import { useDispatch, useSelector } from 'react-redux';
+import SaveIcon from '@material-ui/icons/Save';
+import SelectInput from 'components/Input/SelectInput';
+import * as yup from 'yup';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers';
+import { Grid, makeStyles, Button, MenuItem } from '@material-ui/core';
+import { updateUser } from 'state/ducks/user/actions';
+import Loader from 'components/Loader/Loader';
+import Message from 'components/Message/Message';
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
   password: yup.string(),
-  username: yup
-    .string()
-    .required()
-    .matches(
-      /^[a-zA-Z0-9_]{4,20}$/,
-      "Username can only contain alphabets, numbers, and underscores, and must be 4 to 20 characters long"
-    ),
+  username: yup.string().required(),
   role: yup.string().required(),
 });
 
 const useStyles = makeStyles((theme) => ({
   mBottom: {
-    display: "flex",
-    justifyContent: "center",
+    display: 'flex',
+    justifyContent: 'center',
   },
   button: {
-    padding: "10px",
+    padding: '10px',
   },
   textField: {
-    width: "100%",
+    width: '100%',
   },
 }));
 
@@ -50,7 +44,7 @@ const UserForm = ({ preloadedValues }) => {
     formState: { errors },
   } = useForm({
     defaultValues: preloadedValues,
-    mode: "onBlur",
+    mode: 'onBlur',
     resolver: yupResolver(schema),
   });
 
@@ -66,7 +60,7 @@ const UserForm = ({ preloadedValues }) => {
 
       <Grid container spacing={3}>
         <Grid item xs={4}>
-          <CustomField
+          <Input
             ref={register}
             id="username"
             type="text"
@@ -77,25 +71,23 @@ const UserForm = ({ preloadedValues }) => {
           />
         </Grid>
         <Grid item xs={4}>
-          <CustomField
+          <Input
             ref={register}
             id="email"
             type="text"
             label="Email"
             name="email"
-            autoComplete="off"
             error={!!errors.email}
             helperText={errors?.email?.message}
           />
         </Grid>
         <Grid item xs={4}>
-          <CustomField
+          <Input
             ref={register}
             id="password"
             type="password"
             label="Password"
             name="password"
-            autoComplete="off"
             error={!!errors.password}
             helperText={errors?.password?.message}
           />
@@ -108,7 +100,7 @@ const UserForm = ({ preloadedValues }) => {
             className={classes.textField}
             label="Role"
             control={control}
-            defaultValue={""}
+            defaultValue={''}
             variant="outlined"
             margin="normal"
             error={!!errors.role}
@@ -130,9 +122,9 @@ const UserForm = ({ preloadedValues }) => {
               {loading ? (
                 <Loader />
               ) : preloadedValues ? (
-                "Update User"
+                'Update User'
               ) : (
-                "Save User"
+                'Save User'
               )}
             </Button>
           </div>

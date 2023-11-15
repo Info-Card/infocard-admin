@@ -1,6 +1,6 @@
-import * as types from "./types";
+import * as types from './types';
 
-import UserService from "../../services/user.service";
+import UserService from '../../services/user.service';
 
 export const getUsers = (query) => async (dispatch) => {
   try {

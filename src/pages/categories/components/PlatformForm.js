@@ -1,6 +1,6 @@
 import React from "react";
 import Form from "components/Form/Form";
-import CustomField from "components/Input/CustomField";
+import Input from "components/Input/Input";
 import { useDispatch, useSelector } from "react-redux";
 import SaveIcon from "@material-ui/icons/Save";
 import * as yup from "yup";
@@ -71,7 +71,7 @@ const UpdateCategoryForm = ({ preloadedValues }) => {
       {error && <Message severity="error">{error}</Message>}
       <Grid container spacing={3} style={{ marginBottom: "10px" }}>
         <Grid item xs={4} hidden>
-          <CustomField
+          <Input
             ref={register}
             id="category"
             type="text"
@@ -82,7 +82,7 @@ const UpdateCategoryForm = ({ preloadedValues }) => {
           />
         </Grid>
         <Grid item xs={4}>
-          <CustomField
+          <Input
             ref={register}
             id="title"
             type="text"
@@ -93,7 +93,7 @@ const UpdateCategoryForm = ({ preloadedValues }) => {
           />
         </Grid>
         <Grid item xs={4}>
-          <CustomField
+          <Input
             ref={register}
             id="headline"
             type="text"
@@ -104,7 +104,7 @@ const UpdateCategoryForm = ({ preloadedValues }) => {
           />
         </Grid>
         <Grid item xs={4}>
-          <CustomField
+          <Input
             ref={register}
             id="webBaseURL"
             type="text"
@@ -115,7 +115,7 @@ const UpdateCategoryForm = ({ preloadedValues }) => {
           />
         </Grid>
         <Grid item xs={4}>
-          <CustomField
+          <Input
             ref={register}
             id="iOSBaseURL"
             type="text"
@@ -126,7 +126,7 @@ const UpdateCategoryForm = ({ preloadedValues }) => {
           />
         </Grid>
         <Grid item xs={4}>
-          <CustomField
+          <Input
             ref={register}
             id="androidBaseURL"
             type="text"
@@ -138,7 +138,7 @@ const UpdateCategoryForm = ({ preloadedValues }) => {
         </Grid>
 
         <Grid item xs={4}>
-          <CustomField
+          <Input
             ref={register}
             id="image"
             type="file"

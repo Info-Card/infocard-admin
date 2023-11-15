@@ -18,7 +18,7 @@ export default (state = initialState, action) => {
         error: payload,
       };
     case types.GET_CATEGORIES_SUCCESS:
-      return { results: payload };
+      return payload;
     case types.CREATE_CATEGORY_SUCCESS:
       return {
         loading: false,

@@ -1,32 +1,32 @@
-import ApiService from "./ApiService";
+import api from "./api";
 
-class UserService extends ApiService {
+class UserService {
   getAll(query) {
-    return this.instance.get(`/v1/users?${query}`);
+    return api.get(`/v1/users?${query}`);
   }
 
   get(id) {
-    return this.instance.get(`/v1/users/${id}`);
+    return api.get(`/v1/users/${id}`);
   }
 
   create(data) {
-    return this.instance.post("/v1/users", data);
+    return api.post("/v1/users", data);
   }
 
   update(id, data) {
     if (data.password === "") {
       delete data.password;
     }
-    return this.instance.patch(`/v1/users/${id}`, data);
+    return api.patch(`/v1/users/${id}`, data);
   }
 
   delete(id) {
-    return this.instance.delete(`/v1/users/${id}`);
+    return api.delete(`/v1/users/${id}`);
   }
 
-  exportCsv() {
-    return this.instance.get(`/v1/users/csv`);
-  }
+  // deleteAll() {
+  //   return http.delete(`/tutorials`);
+  // }
 
   // findByTitle(title) {
   //   return http.get(`/tutorials?title=${title}`);
