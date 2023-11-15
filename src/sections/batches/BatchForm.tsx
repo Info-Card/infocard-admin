@@ -11,15 +11,12 @@ import {
   useUpdateBatchMutation,
 } from '@/store/batches';
 import CustomField from '@/components/custom-field';
-import CustomSelectField from '@/components/custom-select-field';
 
 interface FormData {
   name: string;
+  description: string;
+  quantity?: number;
 }
-
-const schema = yup.object().shape({
-  name: yup.string().required(),
-});
 
 const BatchForm = ({ batch }: any) => {
   const router = useRouter();
@@ -29,6 +26,16 @@ const BatchForm = ({ batch }: any) => {
   const [updateBatch, { isLoading: updateLoading }] =
     useUpdateBatchMutation();
 
+  const schema = yup.object().shape({
+    name: yup.string().required(),
+    description: yup.string().required(),
+    quantity: yup
+      .number()
+      .when('$condition', (condition, schema) =>
+        batch ? schema : schema.required()
+      ),
+  });
+
   const {
     control,
     handleSubmit,
@@ -36,6 +43,7 @@ const BatchForm = ({ batch }: any) => {
   } = useForm<FormData>({
     defaultValues: {
       name: batch?.name || '',
+      description: batch?.description || '',
     },
     resolver: yupResolver(schema),
   });
@@ -71,6 +79,27 @@ const BatchForm = ({ batch }: any) => {
             error={errors.name}
           />
         </Grid>
+        <Grid item xs={12} md={4}>
+          <CustomField
+            variant="filled"
+            name="description"
+            label="Description"
+            control={control}
+            error={errors.description}
+          />
+        </Grid>
+        {!batch && (
+          <Grid item xs={12} md={4}>
+            <CustomField
+              variant="filled"
+              name="quantity"
+              label="Quantity"
+              type="number"
+              control={control}
+              error={errors.quantity}
+            />
+          </Grid>
+        )}
       </Grid>
       <Grid container spacing={1}>
         <Button

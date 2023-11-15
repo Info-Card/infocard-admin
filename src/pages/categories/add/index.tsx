@@ -1,14 +1,8 @@
 import { Box, Container, Typography } from '@mui/material';
 import { DashboardLayout } from '@/layouts/dashboard/layout';
-import { useParams } from 'next/navigation';
-import { useGetCategoryQuery } from '@/store/categories';
-import PlatformsTable from '@/sections/platforms/PlatformsTable';
+import CategoryForm from '@/sections/categories/CategoryForm';
 
 const AddCategoryPage = () => {
-  const { id } = useParams();
-
-  const { data } = useGetCategoryQuery(id);
-
   return (
     <>
       <Box
@@ -18,10 +12,8 @@ const AddCategoryPage = () => {
         }}
       >
         <Container maxWidth="xl">
-          <Typography variant="h4">{data?.name}</Typography>
-          <Box sx={{ mt: 2 }}>
-            {data && <PlatformsTable category={data?.id} />}
-          </Box>
+          <Typography variant="h4">Add Category</Typography>
+          <CategoryForm />
         </Container>
       </Box>
     </>

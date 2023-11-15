@@ -55,7 +55,7 @@ const LoginPage = () => {
   return (
     <>
       <Head>
-        <title>Login | Fcorner Admin</title>
+        <title>Login | Info Card Admin</title>
       </Head>
       <Box
         sx={{

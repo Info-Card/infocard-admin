@@ -31,12 +31,12 @@ const DataTable = (props: any) => {
 
   const [paginationModel, setPaginationModel] = React.useState({
     pageSize: query?.limit || 10,
-    page: query?.page || 1,
+    page: (query?.page || 0) - 1,
   });
 
   useEffect(() => {
     setQuery({
-      page: paginationModel.page || 1,
+      page: (paginationModel.page || 0) + 1,
       limit: paginationModel.pageSize || 10,
     });
   }, [paginationModel, setQuery]);

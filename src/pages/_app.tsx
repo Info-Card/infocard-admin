@@ -48,7 +48,7 @@ const App = (props: any) => {
     <Provider store={store}>
       <CacheProvider value={emotionCache}>
         <Head>
-          <title>Fcorner Admin</title>
+          <title>Info Card Admin</title>
           <meta
             name="viewport"
             content="initial-scale=1, width=device-width"

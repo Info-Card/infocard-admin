@@ -13,7 +13,7 @@ import { AccountProfileDetails } from '@/sections/account/account-profile-detail
 const AccountPage = () => (
   <>
     <Head>
-      <title>Account | Fcorner Admin</title>
+      <title>Account | Info Card Admin</title>
     </Head>
     <Box
       component="main"

@@ -85,7 +85,7 @@ export const AuthLayout = (props: any) => {
                 sx={{ color: '#15B79E' }}
                 target="_blank"
               >
-                Fcorner Admin
+                Info Card Admin
               </Box>
             </Typography>
             <Typography

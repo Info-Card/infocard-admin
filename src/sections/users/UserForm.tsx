@@ -98,23 +98,22 @@ const UserForm = ({ user }: any) => {
             ]}
           />
         </Grid>
-      </Grid>
-      <Grid container spacing={1}>
-        <Button
-          size="large"
-          sx={{ mt: 3, float: 'right' }}
-          type="submit"
-          variant="contained"
-          disabled={createLoading || updateLoading}
-        >
-          {createLoading || updateLoading ? (
-            <Loader />
-          ) : user ? (
-            'Update'
-          ) : (
-            'Add'
-          )}
-        </Button>
+        <Grid item xs={12}>
+          <Button
+            size="large"
+            type="submit"
+            variant="contained"
+            disabled={createLoading || updateLoading}
+          >
+            {createLoading || updateLoading ? (
+              <Loader />
+            ) : user ? (
+              'Update'
+            ) : (
+              'Add'
+            )}
+          </Button>
+        </Grid>
       </Grid>
     </form>
   );

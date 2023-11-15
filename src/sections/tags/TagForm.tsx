@@ -1,33 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Button, Grid } from '@mui/material';
 import { toast } from 'react-toastify';
+import {
+  useCreateTagMutation,
+  useUpdateTagMutation,
+} from '@/store/tags';
 import Loader from '@/components/loader';
 import { useRouter } from 'next/router';
-import {
-  useCreateCategoryMutation,
-  useUpdateCategoryMutation,
-} from '@/store/categories';
 import CustomField from '@/components/custom-field';
-import CustomSelectField from '@/components/custom-select-field';
 
 interface FormData {
-  name: string;
+  customId?: string;
 }
 
 const schema = yup.object().shape({
-  name: yup.string().required(),
+  customId: yup.string(),
 });
 
-const CategoryForm = ({ category }: any) => {
+const TagForm = ({ tag, batch }: any) => {
   const router = useRouter();
 
-  const [createCategory, { isLoading: createLoading }] =
-    useCreateCategoryMutation();
-  const [updateCategory, { isLoading: updateLoading }] =
-    useUpdateCategoryMutation();
+  const [createTag, { isLoading: createLoading }] =
+    useCreateTagMutation();
+  const [updateTag, { isLoading: updateLoading }] =
+    useUpdateTagMutation();
 
   const {
     control,
@@ -35,25 +34,26 @@ const CategoryForm = ({ category }: any) => {
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      name: category?.name || '',
+      customId: tag?.customId || '',
     },
     resolver: yupResolver(schema),
   });
 
   const onSubmit = async (body: FormData) => {
     try {
-      if (category) {
-        await updateCategory({
-          id: category.id,
+      if (tag) {
+        await updateTag({
+          id: tag.id,
           body,
         }).unwrap();
       } else {
-        await createCategory({
+        await createTag({
           ...body,
+          batch,
         }).unwrap();
       }
-      toast.success('Category updated');
-      router.replace(`/categories`);
+      toast.success('Tag updated');
+      router.replace(`/batches/${batch || tag.batch}`);
     } catch (error: any) {
       toast.error(error?.data?.message || error.error);
     }
@@ -65,10 +65,10 @@ const CategoryForm = ({ category }: any) => {
         <Grid item xs={12} md={4}>
           <CustomField
             variant="filled"
-            name="name"
-            label="Name"
+            name="customId"
+            label="Custom Id"
             control={control}
-            error={errors.name}
+            error={errors.customId}
           />
         </Grid>
         <Grid item xs={12}>
@@ -80,7 +80,7 @@ const CategoryForm = ({ category }: any) => {
           >
             {createLoading || updateLoading ? (
               <Loader />
-            ) : category ? (
+            ) : tag ? (
               'Update'
             ) : (
               'Add'
@@ -92,4 +92,4 @@ const CategoryForm = ({ category }: any) => {
   );
 };
 
-export default CategoryForm;
+export default TagForm;

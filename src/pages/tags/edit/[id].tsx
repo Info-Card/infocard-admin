@@ -1,13 +1,13 @@
 import { Box, Container, Typography } from '@mui/material';
 import { DashboardLayout } from '@/layouts/dashboard/layout';
 import { useParams } from 'next/navigation';
-import TagsTable from '@/sections/tags/TagsTable';
-import { useGetBatchQuery } from '@/store/batches';
+import TagForm from '@/sections/tags/TagForm';
+import { useGetTagQuery } from '@/store/tags';
 
-const AddBatchPage = () => {
+const EditTagPage = () => {
   const { id } = useParams();
 
-  const { data } = useGetBatchQuery(id);
+  const { data } = useGetTagQuery(id);
 
   return (
     <>
@@ -18,18 +18,16 @@ const AddBatchPage = () => {
         }}
       >
         <Container maxWidth="xl">
-          <Typography variant="h4">{data?.name}</Typography>
-          <Box sx={{ mt: 2 }}>
-            {data && <TagsTable batch={data?.id} />}
-          </Box>
+          <Typography variant="h4">Update Tag</Typography>
+          <TagForm tag={data} key={data?.id} />
         </Container>
       </Box>
     </>
   );
 };
 
-AddBatchPage.getLayout = (page: any) => (
+EditTagPage.getLayout = (page: any) => (
   <DashboardLayout>{page}</DashboardLayout>
 );
 
-export default AddBatchPage;
+export default EditTagPage;

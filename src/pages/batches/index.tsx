@@ -18,14 +18,32 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 const columns = [
-  { field: 'id', flex: 1 },
-  { field: 'name', flex: 1 },
+  {
+    field: 'name',
+    flex: 2,
+    renderCell: ({ row }: any) => {
+      return (
+        <Link
+          href={`/batches/${row.id}`}
+          style={{ textDecoration: 'none', color: 'black' }}
+        >
+          <Stack direction="row" spacing={1}>
+            <div>
+              {row.name}
+              <br />
+              ID: {row.id}
+            </div>
+          </Stack>
+        </Link>
+      );
+    },
+  },
 ];
 
 const BatchesPage = () => {
   const router = useRouter();
   const [query, setQuery] = useState({
-    page: 0,
+    page: 1,
     limit: 10,
   });
 
@@ -37,7 +55,6 @@ const BatchesPage = () => {
       component="main"
       sx={{
         flexGrow: 1,
-        py: 8,
       }}
     >
       <Container maxWidth="xl">
@@ -65,7 +82,7 @@ const BatchesPage = () => {
             query={query}
             setQuery={setQuery}
             onEdit={(id: any) => {
-              router.replace(`/batches/${id}`);
+              router.replace(`/batches/edit/${id}`);
             }}
             onDelete={(id: any) => {
               deleteBatch(id);
