@@ -18,7 +18,7 @@ const EditBatchPage = () => {
         }}
       >
         <Container maxWidth="xl">
-          <Typography variant="h4">'Update Category</Typography>
+          <Typography variant="h4">Update Category</Typography>
           <BatchForm batch={data} key={data?.id} />
         </Container>
       </Box>

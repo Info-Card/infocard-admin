@@ -18,7 +18,7 @@ const EditCategoryPage = () => {
         }}
       >
         <Container maxWidth="xl">
-          <Typography variant="h4">'Update Category</Typography>
+          <Typography variant="h4">Update Category</Typography>
           <CategoryForm category={data} key={data?.id} />
         </Container>
       </Box>
