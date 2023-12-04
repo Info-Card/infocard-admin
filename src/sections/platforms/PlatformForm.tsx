@@ -136,6 +136,7 @@ const PlatformForm = ({ platform, category }: any) => {
               { label: 'Url', value: 'url' },
               { label: 'Email', value: 'email' },
               { label: 'Username', value: 'username' },
+              { label: 'WhatsApp', value: 'whatsapp' },
             ]}
           />
         </Grid>
