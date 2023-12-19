@@ -31,6 +31,7 @@ const BatchForm = ({ batch }: any) => {
     description: yup.string().required(),
     quantity: yup
       .number()
+      .positive()
       .when('$condition', (condition, schema) =>
         batch ? schema : schema.required()
       ),
