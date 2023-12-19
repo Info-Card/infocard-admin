@@ -25,7 +25,6 @@ const TagsTable = ({ batch }: any) => {
 
   const { data } = useGetTagsQuery({ ...query, batch });
   const [deleteTag] = useDeleteTagMutation();
-
   const columns = [
     {
       field: 'id',

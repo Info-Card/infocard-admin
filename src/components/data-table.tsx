@@ -28,12 +28,14 @@ const DataTable = (props: any) => {
     onEdit,
     onDelete,
     placeHolder,
+    showEdit,
   } = props;
 
   const [paginationModel, setPaginationModel] = React.useState({
     pageSize: query?.limit || 10,
     page: (query?.page || 0) - 1,
   });
+  console.log('jj', showEdit);
 
   useEffect(() => {
     setQuery({
