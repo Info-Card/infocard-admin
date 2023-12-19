@@ -45,6 +45,12 @@ const UserForm = ({ user }: any) => {
     },
     resolver: yupResolver(schema),
   });
+  var userItem = localStorage.getItem('user');
+  if (userItem !== null) {
+    var userObject = JSON.parse(userItem);
+  } else {
+    console.log('User data not found in local storage');
+  }
 
   const onSubmit = async (body: FormData) => {
     try {
@@ -96,6 +102,8 @@ const UserForm = ({ user }: any) => {
               { label: 'User', value: 'user' },
               { label: 'Admin', value: 'admin' },
             ]}
+            // Disable the field based on the condition
+            disabled={userObject.email === user.email}
           />
         </Grid>
         <Grid item xs={12}>
