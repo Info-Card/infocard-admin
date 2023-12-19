@@ -67,6 +67,7 @@ const UsersPage = () => {
 
   const { data } = useGetUsersQuery(query);
   const [deleteUser] = useDeleteUserMutation();
+  const placeHolder = 'Search by email';
 
   return (
     <Box
@@ -92,6 +93,7 @@ const UsersPage = () => {
             onDelete={(id: any) => {
               deleteUser(id);
             }}
+            placeHolder={placeHolder}
           />
         </Stack>
       </Container>

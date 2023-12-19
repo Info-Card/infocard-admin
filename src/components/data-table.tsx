@@ -27,6 +27,7 @@ const DataTable = (props: any) => {
     setQuery,
     onEdit,
     onDelete,
+    placeHolder,
   } = props;
 
   const [paginationModel, setPaginationModel] = React.useState({
@@ -66,7 +67,7 @@ const DataTable = (props: any) => {
           <Stack alignItems="center" direction="row">
             <OutlinedInput
               defaultValue=""
-              placeholder="Search by Email"
+              placeholder={placeHolder ? placeHolder : 'Search'}
               size="small"
               startAdornment={
                 <InputAdornment position="start">
@@ -110,19 +111,17 @@ const DataTable = (props: any) => {
             renderCell: ({ id, customId }: any) => {
               return (
                 <>
-                  {onEdit &&
-                    customId !== undefined &&
-                    customId !== null && (
-                      <span
-                        onClick={() => {
-                          onEdit(id);
-                        }}
-                      >
-                        <SvgIcon fontSize="small">
-                          <PencilIcon />
-                        </SvgIcon>
-                      </span>
-                    )}
+                  {onEdit && (
+                    <span
+                      onClick={() => {
+                        onEdit(id);
+                      }}
+                    >
+                      <SvgIcon fontSize="small">
+                        <PencilIcon />
+                      </SvgIcon>
+                    </span>
+                  )}
                   {onDelete && (
                     <span
                       style={{
