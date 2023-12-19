@@ -20,6 +20,7 @@ interface FormData {
   iOSBaseURL?: string;
   androidBaseURL?: string;
   type: string;
+  image?: FileList;
 }
 
 const schema = yup.object().shape({
@@ -29,6 +30,23 @@ const schema = yup.object().shape({
   iOSBaseURL: yup.string(),
   androidBaseURL: yup.string(),
   type: yup.string().required(),
+  image: yup
+    .mixed()
+    .test('fileSize', 'File size is too large', (value) => {
+      // Adjust the maximum file size as needed
+      return (
+        value?.length === 0 ||
+        (value[0] && value[0].size <= 1024 * 1024)
+      );
+    })
+    .test('fileType', 'Unsupported file type', (value) => {
+      // Adjust the allowed file types as needed
+      return (
+        value.length === 0 ||
+        (value[0] &&
+          ['image/jpeg', 'image/png'].includes(value[0].type))
+      );
+    }),
 });
 
 const PlatformForm = ({ platform, category }: any) => {
@@ -121,6 +139,15 @@ const PlatformForm = ({ platform, category }: any) => {
             label="Android Base Url"
             control={control}
             error={errors.androidBaseURL}
+          />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <CustomField
+            variant="filled"
+            name="image"
+            type="file"
+            control={control}
+            error={errors.image}
           />
         </Grid>
         <Grid item xs={12} md={4}>
