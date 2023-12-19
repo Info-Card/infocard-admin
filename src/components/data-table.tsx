@@ -66,7 +66,7 @@ const DataTable = (props: any) => {
           <Stack alignItems="center" direction="row">
             <OutlinedInput
               defaultValue=""
-              placeholder="Search"
+              placeholder="Search by Email"
               size="small"
               startAdornment={
                 <InputAdornment position="start">
