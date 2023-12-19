@@ -12,7 +12,9 @@ import {
 import { getInitials } from '@/utils/get-initials';
 import { getImageUrl } from '@/utils/get-Image-url';
 import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
+import { id } from 'date-fns/locale';
+import { any } from 'prop-types';
 
 const TagsTable = ({ batch }: any) => {
   const router = useRouter();
