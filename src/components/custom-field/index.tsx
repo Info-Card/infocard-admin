@@ -3,9 +3,13 @@ import {
   TextField,
   FormControl,
   FormHelperText,
+  InputAdornment,
+  IconButton,
   TextFieldProps,
 } from '@mui/material';
 import { Controller } from 'react-hook-form';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 type CustomFieldProps = {
   control: any;
@@ -21,6 +25,8 @@ function CustomField({
   inputProps,
   ...rest
 }: CustomFieldProps) {
+  const [showPassword, setShowPassword] = React.useState(false);
+
   return (
     <FormControl fullWidth sx={{ mb: 4 }}>
       <Controller
@@ -30,12 +36,28 @@ function CustomField({
         render={({ field }) => (
           <TextField
             {...rest}
-            value={field.value}
-            onBlur={field.onBlur}
-            onChange={field.onChange}
+            {...field}
+            type={showPassword ? 'text' : rest.type || 'text'}
             error={Boolean(error)}
             InputProps={{
-              inputProps: inputProps,
+              ...(rest.InputProps || {}),
+              ...(rest.type === 'password' && {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
+                    >
+                      {showPassword ? (
+                        <VisibilityOff />
+                      ) : (
+                        <Visibility />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }),
             }}
           />
         )}
