@@ -33,7 +33,6 @@ const DataTable = (props: any) => {
     pageSize: query?.limit || 10,
     page: (query?.page || 0) - 1,
   });
-  console.log(rows);
 
   useEffect(() => {
     setQuery({
