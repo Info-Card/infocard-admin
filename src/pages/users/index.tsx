@@ -27,7 +27,7 @@ const columns = [
     renderCell: ({ row }: any) => {
       return (
         <Link
-          href={`/platforms/edit/${row.id}`}
+          href={`/users/edit/${row.id}`}
           style={{ textDecoration: 'none', color: 'black' }}
         >
           <Stack direction="row" spacing={1}>

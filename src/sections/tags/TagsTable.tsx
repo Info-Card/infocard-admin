@@ -22,6 +22,7 @@ const TagsTable = ({ batch }: any) => {
     page: 1,
     limit: 10,
   });
+  const [callEditFunction, setCallEditFunction] = useState(true);
 
   const { data } = useGetTagsQuery({ ...query, batch });
   const [deleteTag] = useDeleteTagMutation();
@@ -65,7 +66,12 @@ const TagsTable = ({ batch }: any) => {
       query={query}
       setQuery={setQuery}
       onEdit={(id: any) => {
-        router.push(`/tags/edit/${id}`);
+        function findCustomId() {
+          return data?.results.find(obj.customId);
+        }
+        if (findCustomId()) {
+          router.push(`/tags/edit/${id}`);
+        }
       }}
       onDelete={(id: any) => {
         deleteTag(id);
