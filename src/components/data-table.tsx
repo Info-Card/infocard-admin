@@ -28,7 +28,6 @@ const DataTable = (props: any) => {
     onEdit,
     onDelete,
     placeHolder,
-    showEdit,
   } = props;
 
   const [paginationModel, setPaginationModel] = React.useState({
@@ -109,7 +108,7 @@ const DataTable = (props: any) => {
           rows={rows || []}
           columns={columns.concat({
             field: 'actions',
-            renderCell: ({ id, customId }: any) => {
+            renderCell: ({ id }: any) => {
               return (
                 <>
                   {onEdit && (
