@@ -1,74 +1,132 @@
 import React from 'react';
 import {
-  TextField,
   FormControl,
   FormHelperText,
-  InputAdornment,
-  IconButton,
-  TextFieldProps,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
 } from '@mui/material';
-import { Controller } from 'react-hook-form';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useController } from 'react-hook-form';
 
-type CustomFieldProps = {
+interface CustomFieldProps {
+  size?: 'small' | 'medium';
+  name: string;
+  label: string;
   control: any;
-  rules?: any;
-  error?: any;
-} & Partial<TextFieldProps>;
+  type?: any;
+  accept?: string;
+  errors?: Record<string, any>;
+  setValue?: any;
+  hidden?: boolean;
+  options?: Array<{ label: string; value: any }>;
+  inputProps?: any;
+  disabled?: boolean;
+}
 
-function CustomField({
+const CustomField: React.FC<CustomFieldProps> = ({
   name,
+  label,
   control,
-  rules,
-  error,
+  type = 'text',
+  accept,
+  errors,
+  setValue,
+  hidden,
+  options,
+  size,
   inputProps,
-  ...rest
-}: CustomFieldProps) {
-  const [showPassword, setShowPassword] = React.useState(false);
+  disabled,
+}) => {
+  const {
+    field,
+    fieldState: { invalid, isTouched },
+  } = useController({
+    name,
+    control,
+    defaultValue: '',
+  });
+
+  const handleFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (setValue && event.target.files) {
+      setValue(name, event.target.files[0]);
+    }
+  };
+
+  const renderInputField = () => {
+    switch (type) {
+      case 'file':
+        return (
+          <TextField
+            size={size}
+            type="file"
+            inputProps={{ accept }}
+            onChange={handleFileChange}
+            error={invalid && isTouched}
+            disabled={disabled}
+          />
+        );
+      case 'select':
+        return (
+          <>
+            <InputLabel variant="filled">{label}</InputLabel>
+            <Select
+              variant="filled"
+              label={label}
+              {...field}
+              disabled={disabled}
+            >
+              {options?.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </>
+        );
+      case 'date':
+        return (
+          <TextField
+            variant="filled"
+            size={size}
+            label={label}
+            type={type}
+            inputProps={inputProps}
+            {...field}
+            error={invalid && isTouched}
+            disabled={disabled}
+          />
+        );
+      default:
+        return (
+          <TextField
+            variant="filled"
+            size={size}
+            label={label}
+            type={type}
+            inputProps={inputProps}
+            {...field}
+            error={invalid && isTouched}
+            disabled={disabled}
+          />
+        );
+    }
+  };
 
   return (
-    <FormControl fullWidth sx={{ mb: 4 }}>
-      <Controller
-        name={name || ''}
-        control={control}
-        rules={rules}
-        render={({ field }) => (
-          <TextField
-            {...rest}
-            {...field}
-            type={showPassword ? 'text' : rest.type || 'text'}
-            error={Boolean(error)}
-            InputProps={{
-              ...(rest.InputProps || {}),
-              ...(rest.type === 'password' && {
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => setShowPassword(!showPassword)}
-                      edge="end"
-                    >
-                      {showPassword ? (
-                        <VisibilityOff />
-                      ) : (
-                        <Visibility />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }),
-            }}
-          />
-        )}
-      />
-      {error && (
-        <FormHelperText sx={{ color: 'error.main' }}>
-          {error.message}
-        </FormHelperText>
+    <FormControl
+      fullWidth
+      sx={{ mb: 1, textAlign: 'left' }}
+      hidden={hidden}
+    >
+      {renderInputField()}
+      {errors?.[name] && (
+        <FormHelperText error>{errors[name].message}</FormHelperText>
       )}
     </FormControl>
   );
-}
+};
 
 export default CustomField;

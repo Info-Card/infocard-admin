@@ -73,31 +73,28 @@ const BatchForm = ({ batch }: any) => {
       <Grid sx={{ mt: 4 }} container spacing={1}>
         <Grid item xs={12} md={4}>
           <CustomField
-            variant="filled"
             name="name"
             label="Name"
             control={control}
-            error={errors.name}
+            errors={errors}
           />
         </Grid>
         <Grid item xs={12} md={4}>
           <CustomField
-            variant="filled"
             name="description"
             label="Description"
             control={control}
-            error={errors.description}
+            errors={errors}
           />
         </Grid>
         {!batch && (
           <Grid item xs={12} md={4}>
             <CustomField
-              variant="filled"
               name="quantity"
               label="Quantity"
               type="number"
               control={control}
-              error={errors.quantity}
+              errors={errors}
             />
           </Grid>
         )}

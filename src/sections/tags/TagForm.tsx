@@ -64,11 +64,10 @@ const TagForm = ({ tag, batch }: any) => {
       <Grid sx={{ my: 4 }} container spacing={1}>
         <Grid item xs={12} md={4}>
           <CustomField
-            variant="filled"
             name="customId"
             label="Custom Id"
             control={control}
-            error={errors.customId}
+            errors={errors}
           />
         </Grid>
         <Grid item xs={12}>

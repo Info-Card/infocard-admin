@@ -80,19 +80,17 @@ const LoginPage = () => {
             </Stack>
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
               <CustomField
-                variant="filled"
                 name="email"
                 label="Email"
                 control={control}
-                error={errors.email}
+                errors={errors}
               />
               <CustomField
-                variant="filled"
                 name="password"
                 label="Password"
                 type="password"
                 control={control}
-                error={errors.password}
+                errors={errors}
               />
               <Button
                 fullWidth

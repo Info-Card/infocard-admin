@@ -20,7 +20,7 @@ interface FormData {
   iOSBaseURL?: string;
   androidBaseURL?: string;
   type: string;
-  image?: FileList;
+  image?: any;
 }
 
 const schema = yup.object().shape({
@@ -44,6 +44,7 @@ const PlatformForm = ({ platform, category }: any) => {
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
@@ -78,60 +79,61 @@ const PlatformForm = ({ platform, category }: any) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      noValidate
+      encType="multipart/form-data"
+    >
       <Grid sx={{ my: 4 }} container spacing={1}>
         <Grid item xs={12} md={4}>
           <CustomField
-            variant="filled"
             name="title"
             label="Title"
             control={control}
-            error={errors.title}
+            errors={errors}
           />
         </Grid>
         <Grid item xs={12} md={4}>
           <CustomField
-            variant="filled"
             name="headline"
             label="Headline"
             control={control}
-            error={errors.headline}
+            errors={errors}
           />
         </Grid>
         <Grid item xs={12} md={4}>
           <CustomField
-            variant="filled"
             name="webBaseURL"
             label="Web Base Url"
             control={control}
-            error={errors.webBaseURL}
+            errors={errors}
           />
         </Grid>
         <Grid item xs={12} md={4}>
           <CustomField
-            variant="filled"
             name="iOSBaseURL"
             label="iOS Base Url"
             control={control}
-            error={errors.iOSBaseURL}
+            errors={errors}
           />
         </Grid>
         <Grid item xs={12} md={4}>
           <CustomField
-            variant="filled"
             name="androidBaseURL"
             label="Android Base Url"
             control={control}
-            error={errors.androidBaseURL}
+            errors={errors}
           />
         </Grid>
         <Grid item xs={12} md={4}>
           <CustomField
+            label=""
             control={control}
             name="image"
             type="file"
             accept="image/*"
-            error={errors.image}
+            errors={errors}
+            setValue={setValue}
           />
         </Grid>
         <Grid item xs={12} md={4}>
