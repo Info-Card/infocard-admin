@@ -43,14 +43,9 @@ const columns = [
     flex: 2,
     renderCell: ({ row }: any) => {
       return (
-        <div>
-          <Stack direction="row" spacing={1}>
-            <div>
-              <br />
-              {row.description}
-            </div>
-          </Stack>
-        </div>
+        <Stack direction="row" spacing={1}>
+          {row.description}
+        </Stack>
       );
     },
   },
