@@ -12,6 +12,7 @@ import {
 } from '@/store/user';
 import CustomField from '@/components/custom-field';
 import CustomSelectField from '@/components/custom-select-field';
+import { useAuth } from '@/hooks/use-auth';
 
 interface FormData {
   username: string;
@@ -45,12 +46,7 @@ const UserForm = ({ user }: any) => {
     },
     resolver: yupResolver(schema),
   });
-  var userItem = localStorage.getItem('user');
-  if (userItem !== null) {
-    var userObject = JSON.parse(userItem);
-  } else {
-    console.log('User data not found in local storage');
-  }
+  const { userLoged } = useAuth();
 
   const onSubmit = async (body: FormData) => {
     try {
@@ -103,7 +99,7 @@ const UserForm = ({ user }: any) => {
               { label: 'Admin', value: 'admin' },
             ]}
             // Disable the field based on the condition
-            disabled={userObject.email === user.email}
+            disabled={userLoged?.email === user.email}
           />
         </Grid>
         <Grid item xs={12}>
