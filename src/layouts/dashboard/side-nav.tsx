@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { items } from './config';
 import { SideNavItem } from './side-nav-item';
-import { Scrollbar } from '@/components/Scrollbar';
+import { Scrollbar } from '@/components/ui/Scrollbar';
 
 export const SideNav = (props: any) => {
   const { open, onClose } = props;
