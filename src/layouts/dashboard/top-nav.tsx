@@ -18,10 +18,6 @@ const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
 
 export const TopNav = (props: any) => {
-  const { onNavOpen } = props;
-  const lgUp = useMediaQuery((theme: any) =>
-    theme.breakpoints.up('lg')
-  );
   const accountPopover = usePopover();
 
   return (
@@ -54,7 +50,7 @@ export const TopNav = (props: any) => {
           }}
         >
           <Stack alignItems="center" direction="row" spacing={2}>
-            <Tooltip title="Notifications">
+            {/* <Tooltip title="Notifications">
               <IconButton>
                 <Badge badgeContent={4} color="success" variant="dot">
                   <SvgIcon fontSize="small">
@@ -62,7 +58,7 @@ export const TopNav = (props: any) => {
                   </SvgIcon>
                 </Badge>
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
             <Avatar
               onClick={accountPopover.handleOpen}
               ref={accountPopover.anchorRef}

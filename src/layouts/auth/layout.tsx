@@ -5,7 +5,6 @@ import {
   Typography,
   Unstable_Grid2 as Grid,
 } from '@mui/material';
-import { Logo } from '@/components/logo';
 
 export const AuthLayout = (props: any) => {
   const { children } = props;
@@ -47,9 +46,7 @@ export const AuthLayout = (props: any) => {
                 height: 32,
                 width: 32,
               }}
-            >
-              <Logo />
-            </Box>
+            ></Box>
           </Box>
           {children}
         </Grid>
