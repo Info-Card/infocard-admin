@@ -6,16 +6,14 @@ import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import 'simplebar-react/dist/simplebar.min.css';
 import '../assets/styles/globals.css';
-
-// ** Store Imports
 import { Provider } from 'react-redux';
 import { createEmotionCache } from '@/utils/create-emotion-cache';
 import { useNProgress } from '@/hooks/use-nprogress';
 import { createTheme } from '@/theme';
 import store from '@/store';
 import { AuthProvider } from '@/contexts/AuthContext';
-import AuthGuard from '@/components/auth-guard';
-import Loader from '@/components/loader';
+import AuthGuard from '@/components/AuthGuard';
+import Loader from '@/components/ui/Loader';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

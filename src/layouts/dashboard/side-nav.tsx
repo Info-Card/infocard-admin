@@ -10,8 +10,7 @@ import {
 } from '@mui/material';
 import { items } from './config';
 import { SideNavItem } from './side-nav-item';
-import { Scrollbar } from '@/components/scrollbar';
-import { Logo } from '@/components/logo';
+import { Scrollbar } from '@/components/Scrollbar';
 
 export const SideNav = (props: any) => {
   const { open, onClose } = props;
@@ -48,9 +47,7 @@ export const SideNav = (props: any) => {
               height: 32,
               width: 32,
             }}
-          >
-            <Logo />
-          </Box>
+          ></Box>
         </Box>
         <Divider sx={{ borderColor: 'neutral.700' }} />
         <Box

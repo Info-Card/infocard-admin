@@ -1,22 +1,41 @@
-import { useGetMeQuery, useLoginMutation } from '@/store/auth';
+import React, {
+  createContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from 'react';
 import { useRouter } from 'next/router';
-import { createContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { useGetMeQuery, useLoginMutation } from '@/store/auth';
 
-const defaultProvider = {
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+interface AuthContextValue {
+  isLoading: boolean;
+  user: any;
+  login: (params: any) => Promise<void>;
+  logout: () => void;
+}
+
+const initialAuthContextValue: AuthContextValue = {
+  isLoading: false,
   user: undefined,
-  login: (params: any) => Promise.resolve(),
+  login: async () => {},
   logout: () => {},
 };
 
-const AuthContext = createContext(defaultProvider);
+const AuthContext = createContext<AuthContextValue>(
+  initialAuthContextValue
+);
 
-const AuthProvider = ({ children }: any) => {
+const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
 
-  const [user, setUser] = useState<any>(); // Provide the type explicitly.
+  const [user, setUser] = useState<any>();
 
-  const { data, isLoading } = useGetMeQuery(
+  const { data: userData, isLoading: userLoading } = useGetMeQuery(
     {},
     {
       skip:
@@ -25,27 +44,29 @@ const AuthProvider = ({ children }: any) => {
           : true,
     }
   );
-
-  const [login] = useLoginMutation();
+  const [login, { isLoading: loginLoading }] = useLoginMutation();
 
   useEffect(() => {
-    if (data) {
-      setUser(data);
-    } else if (!isLoading) {
+    if (
+      typeof localStorage !== 'undefined' &&
+      localStorage?.getItem('user')
+    ) {
+      setUser(JSON.parse(localStorage?.getItem('user') || ''));
+    } else if (userData) {
+      setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
+    } else if (!userLoading) {
       setUser(null);
     }
-  }, [data, isLoading]);
+  }, [userData, userLoading]);
 
   const handleLogin = async (params: any) => {
     try {
-      const res: any = await login(params).unwrap();
+      const res = await login(params).unwrap();
       setUser(res.user);
       localStorage.setItem('user', JSON.stringify(res.user));
       localStorage.setItem('tokens', JSON.stringify(res.tokens));
-      const returnUrl = router.query.returnUrl;
-      const redirectURL =
-        returnUrl && returnUrl !== '/' ? returnUrl : '/';
-      router.replace(redirectURL as string);
+      router.replace((router.query.returnUrl as string) || '/');
     } catch (err: any) {
       toast.error(err?.data?.message || err.error);
     }
@@ -54,10 +75,12 @@ const AuthProvider = ({ children }: any) => {
   const handleLogout = () => {
     localStorage.removeItem('tokens');
     localStorage.removeItem('user');
+    setUser(null);
     router.push('/auth/login');
   };
 
   const values = {
+    isLoading: userLoading || loginLoading,
     user,
     login: handleLogin,
     logout: handleLogout,

@@ -57,9 +57,9 @@ export const AccountPopover = (props: any) => {
           },
         }}
       >
-        <MenuItem onClick={() => router.replace('/account')}>
+        {/* <MenuItem onClick={() => router.replace('/account')}>
           Account
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
       </MenuList>
     </Popover>

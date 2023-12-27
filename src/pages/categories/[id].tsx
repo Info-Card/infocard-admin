@@ -1,35 +1,3 @@
-import { Box, Container, Typography } from '@mui/material';
-import { DashboardLayout } from '@/layouts/dashboard/layout';
-import { useParams } from 'next/navigation';
-import { useGetCategoryQuery } from '@/store/categories';
-import PlatformsTable from '@/sections/platforms/PlatformsTable';
+import CategoryDetailPage from '@/modules/categories/pages/CategoryDetailPage';
 
-const AddCategoryPage = () => {
-  const { id } = useParams();
-
-  const { data } = useGetCategoryQuery(id);
-
-  return (
-    <>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-        }}
-      >
-        <Container maxWidth="xl">
-          <Typography variant="h4">{data?.name}</Typography>
-          <Box sx={{ mt: 2 }}>
-            {data && <PlatformsTable category={data?.id} />}
-          </Box>
-        </Container>
-      </Box>
-    </>
-  );
-};
-
-AddCategoryPage.getLayout = (page: any) => (
-  <DashboardLayout>{page}</DashboardLayout>
-);
-
-export default AddCategoryPage;
+export default CategoryDetailPage;
