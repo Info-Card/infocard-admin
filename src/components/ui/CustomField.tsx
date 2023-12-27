@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FormControl,
   FormHelperText,
+  IconButton,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
   TextField,
 } from '@mui/material';
 import { useController } from 'react-hook-form';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 interface CustomFieldProps {
   size?: 'small' | 'medium';
@@ -17,7 +20,7 @@ interface CustomFieldProps {
   type?: any;
   accept?: string;
   errors?: Record<string, any>;
-  setValue?: any;
+  setValue?: (name: string, value: any) => void;
   hidden?: boolean;
   options?: Array<{ label: string; value: any }>;
   inputProps?: any;
@@ -46,7 +49,11 @@ const CustomField: React.FC<CustomFieldProps> = ({
     control,
     defaultValue: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -94,6 +101,35 @@ const CustomField: React.FC<CustomFieldProps> = ({
             label={label}
             type={type}
             inputProps={inputProps}
+            {...field}
+            error={invalid && isTouched}
+            disabled={disabled}
+          />
+        );
+      case 'password':
+        return (
+          <TextField
+            variant="filled"
+            size={size}
+            label={label}
+            type={showPassword ? 'text' : 'password'}
+            InputProps={{
+              ...inputProps,
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={togglePasswordVisibility}
+                    edge="end"
+                  >
+                    {showPassword ? (
+                      <VisibilityOff />
+                    ) : (
+                      <Visibility />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
             {...field}
             error={invalid && isTouched}
             disabled={disabled}

@@ -70,8 +70,7 @@ const TagsTable = ({ batch }: any) => {
         const foundElement = data.results.find(
           (element: any) => element.id === id
         );
-
-        if (foundElement.customId !== undefined) {
+        if (foundElement.customId) {
           router.push(`/tags/edit/${id}`);
         } else {
           toast.error('You are not allowed to edit this tag.');
