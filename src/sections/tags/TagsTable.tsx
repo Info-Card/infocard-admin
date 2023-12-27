@@ -12,7 +12,10 @@ import {
 import { getInitials } from '@/utils/get-initials';
 import { getImageUrl } from '@/utils/get-Image-url';
 import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
+import { id } from 'date-fns/locale';
+import { any } from 'prop-types';
+import { toast } from 'react-toastify';
 
 const TagsTable = ({ batch }: any) => {
   const router = useRouter();
@@ -20,10 +23,10 @@ const TagsTable = ({ batch }: any) => {
     page: 1,
     limit: 10,
   });
+  const [callEditFunction, setCallEditFunction] = useState(true);
 
   const { data } = useGetTagsQuery({ ...query, batch });
   const [deleteTag] = useDeleteTagMutation();
-
   const columns = [
     {
       field: 'id',
@@ -64,7 +67,15 @@ const TagsTable = ({ batch }: any) => {
       query={query}
       setQuery={setQuery}
       onEdit={(id: any) => {
-        router.push(`/tags/edit/${id}`);
+        const foundElement = data.results.find(
+          (element: any) => element.id === id
+        );
+
+        if (foundElement.customId !== undefined) {
+          router.push(`/tags/edit/${id}`);
+        } else {
+          toast.error('You are not allowed to edit this tag.');
+        }
       }}
       onDelete={(id: any) => {
         deleteTag(id);

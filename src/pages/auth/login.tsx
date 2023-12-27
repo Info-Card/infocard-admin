@@ -77,33 +77,20 @@ const LoginPage = () => {
           <div>
             <Stack spacing={1} sx={{ mb: 3 }}>
               <Typography variant="h4">Login</Typography>
-              <Typography color="text.secondary" variant="body2">
-                Don&apos;t have an account? &nbsp;
-                <Link
-                  component={NextLink}
-                  href="/auth/register"
-                  underline="hover"
-                  variant="subtitle2"
-                >
-                  Register
-                </Link>
-              </Typography>
             </Stack>
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
               <CustomField
-                variant="filled"
                 name="email"
                 label="Email"
                 control={control}
-                error={errors.email}
+                errors={errors}
               />
               <CustomField
-                variant="filled"
                 name="password"
                 label="Password"
                 type="password"
                 control={control}
-                error={errors.password}
+                errors={errors}
               />
               <Button
                 fullWidth

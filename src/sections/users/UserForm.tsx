@@ -12,6 +12,7 @@ import {
 } from '@/store/user';
 import CustomField from '@/components/custom-field';
 import CustomSelectField from '@/components/custom-select-field';
+import { useAuth } from '@/hooks/use-auth';
 
 interface FormData {
   username: string;
@@ -45,7 +46,7 @@ const UserForm = ({ user }: any) => {
     },
     resolver: yupResolver(schema),
   });
-
+  const { user: authUser }: any = useAuth();
   const onSubmit = async (body: FormData) => {
     try {
       if (user) {
@@ -70,32 +71,32 @@ const UserForm = ({ user }: any) => {
       <Grid sx={{ mt: 4 }} container spacing={1}>
         <Grid item xs={12} md={4}>
           <CustomField
-            variant="filled"
             name="username"
             label="Username"
             control={control}
-            error={errors.username}
+            errors={errors}
           />
         </Grid>
         <Grid item xs={12} md={4}>
           <CustomField
-            variant="filled"
             name="email"
             label="Email"
             control={control}
-            error={errors.email}
+            errors={errors}
           />
         </Grid>
         <Grid item xs={12} md={4}>
-          <CustomSelectField
+          <CustomField
             name="role"
             label="Role"
+            type="select"
             control={control}
-            error={errors.role}
+            errors={errors}
             options={[
               { label: 'User', value: 'user' },
               { label: 'Admin', value: 'admin' },
             ]}
+            disabled={authUser?.email === (user?.email || '')}
           />
         </Grid>
         <Grid item xs={12}>

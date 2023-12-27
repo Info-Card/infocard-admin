@@ -38,6 +38,17 @@ const columns = [
       );
     },
   },
+  {
+    field: 'description',
+    flex: 2,
+    renderCell: ({ row }: any) => {
+      return (
+        <Stack direction="row" spacing={1}>
+          {row.description}
+        </Stack>
+      );
+    },
+  },
 ];
 
 const BatchesPage = () => {

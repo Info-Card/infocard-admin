@@ -1,5 +1,6 @@
 import { PLATFORMS_URL } from '@/configs/constants';
 import { apiSlice } from '../api';
+import { toFormData } from 'axios';
 
 export const platformSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -22,7 +23,7 @@ export const platformSlice = apiSlice.injectEndpoints({
         return {
           url: `${PLATFORMS_URL}`,
           method: 'POST',
-          body: body,
+          body: toFormData(body),
         };
       },
       invalidatesTags: ['Platform'],
@@ -32,7 +33,7 @@ export const platformSlice = apiSlice.injectEndpoints({
         return {
           url: `${PLATFORMS_URL}/${id}`,
           method: 'PATCH',
-          body: body,
+          body: toFormData(body),
         };
       },
       invalidatesTags: ['Platform'],

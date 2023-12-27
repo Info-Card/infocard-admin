@@ -27,6 +27,7 @@ const DataTable = (props: any) => {
     setQuery,
     onEdit,
     onDelete,
+    placeHolder,
   } = props;
 
   const [paginationModel, setPaginationModel] = React.useState({
@@ -66,7 +67,7 @@ const DataTable = (props: any) => {
           <Stack alignItems="center" direction="row">
             <OutlinedInput
               defaultValue=""
-              placeholder="Search"
+              placeholder={placeHolder ? placeHolder : 'Search'}
               size="small"
               startAdornment={
                 <InputAdornment position="start">

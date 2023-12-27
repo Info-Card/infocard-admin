@@ -14,6 +14,7 @@ type CustomSelectFieldProps = {
   control: any;
   error?: any;
   options: any[];
+  disabled?: any;
 };
 
 function CustomSelectField({

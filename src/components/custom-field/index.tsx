@@ -1,52 +1,132 @@
 import React from 'react';
 import {
-  TextField,
   FormControl,
   FormHelperText,
-  TextFieldProps,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
 } from '@mui/material';
-import { Controller } from 'react-hook-form';
+import { useController } from 'react-hook-form';
 
-type CustomFieldProps = {
+interface CustomFieldProps {
+  size?: 'small' | 'medium';
+  name: string;
+  label: string;
   control: any;
-  rules?: any;
-  error?: any;
-} & Partial<TextFieldProps>;
+  type?: any;
+  accept?: string;
+  errors?: Record<string, any>;
+  setValue?: any;
+  hidden?: boolean;
+  options?: Array<{ label: string; value: any }>;
+  inputProps?: any;
+  disabled?: boolean;
+}
 
-function CustomField({
+const CustomField: React.FC<CustomFieldProps> = ({
   name,
+  label,
   control,
-  rules,
-  error,
+  type = 'text',
+  accept,
+  errors,
+  setValue,
+  hidden,
+  options,
+  size,
   inputProps,
-  ...rest
-}: CustomFieldProps) {
-  return (
-    <FormControl fullWidth sx={{ mb: 4 }}>
-      <Controller
-        name={name || ''}
-        control={control}
-        rules={rules}
-        render={({ field }) => (
+  disabled,
+}) => {
+  const {
+    field,
+    fieldState: { invalid, isTouched },
+  } = useController({
+    name,
+    control,
+    defaultValue: '',
+  });
+
+  const handleFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (setValue && event.target.files) {
+      setValue(name, event.target.files[0]);
+    }
+  };
+
+  const renderInputField = () => {
+    switch (type) {
+      case 'file':
+        return (
           <TextField
-            {...rest}
-            value={field.value}
-            onBlur={field.onBlur}
-            onChange={field.onChange}
-            error={Boolean(error)}
-            InputProps={{
-              inputProps: inputProps,
-            }}
+            size={size}
+            type="file"
+            inputProps={{ accept }}
+            onChange={handleFileChange}
+            error={invalid && isTouched}
+            disabled={disabled}
           />
-        )}
-      />
-      {error && (
-        <FormHelperText sx={{ color: 'error.main' }}>
-          {error.message}
-        </FormHelperText>
+        );
+      case 'select':
+        return (
+          <>
+            <InputLabel variant="filled">{label}</InputLabel>
+            <Select
+              variant="filled"
+              label={label}
+              {...field}
+              disabled={disabled}
+            >
+              {options?.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </>
+        );
+      case 'date':
+        return (
+          <TextField
+            variant="filled"
+            size={size}
+            label={label}
+            type={type}
+            inputProps={inputProps}
+            {...field}
+            error={invalid && isTouched}
+            disabled={disabled}
+          />
+        );
+      default:
+        return (
+          <TextField
+            variant="filled"
+            size={size}
+            label={label}
+            type={type}
+            inputProps={inputProps}
+            {...field}
+            error={invalid && isTouched}
+            disabled={disabled}
+          />
+        );
+    }
+  };
+
+  return (
+    <FormControl
+      fullWidth
+      sx={{ mb: 1, textAlign: 'left' }}
+      hidden={hidden}
+    >
+      {renderInputField()}
+      {errors?.[name] && (
+        <FormHelperText error>{errors[name].message}</FormHelperText>
       )}
     </FormControl>
   );
-}
+};
 
 export default CustomField;
