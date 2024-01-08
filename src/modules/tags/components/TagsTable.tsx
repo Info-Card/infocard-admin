@@ -79,6 +79,7 @@ const TagsTable = ({ batch }: any) => {
       onDelete={(id: any) => {
         deleteTag(id);
       }}
+      isExport={true}
     />
   );
 };

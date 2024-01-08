@@ -28,6 +28,7 @@ const DataTable = (props: any) => {
     onEdit,
     onDelete,
     placeHolder,
+    isExport,
   } = props;
 
   const [paginationModel, setPaginationModel] = React.useState({
@@ -79,28 +80,21 @@ const DataTable = (props: any) => {
               sx={{ maxWidth: 500 }}
               onChange={(e) => debouncedSearch(e.target.value)}
             />
-            <Button
-              color="inherit"
-              size="small"
-              startIcon={
-                <SvgIcon fontSize="small">
-                  <FunnelIcon />
-                </SvgIcon>
-              }
-            >
-              Filter
-            </Button>
-            <Button
-              color="inherit"
-              size="small"
-              startIcon={
-                <SvgIcon fontSize="small">
-                  <ArrowDownOnSquareIcon />
-                </SvgIcon>
-              }
-            >
-              Export
-            </Button>
+            {isExport ? (
+              <Button
+                color="inherit"
+                size="small"
+                startIcon={
+                  <SvgIcon fontSize="small">
+                    <ArrowDownOnSquareIcon />
+                  </SvgIcon>
+                }
+              >
+                Export
+              </Button>
+            ) : (
+              ''
+            )}
           </Stack>
         </Stack>
         <DataGrid

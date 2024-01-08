@@ -90,6 +90,7 @@ const UsersPage = () => {
               deleteUser(id);
             }}
             placeHolder={'Search by email'}
+            isExport={true}
           />
         </Stack>
       </Container>
