@@ -29,6 +29,8 @@ const DataTable = (props: any) => {
     onDelete,
     placeHolder,
     isExport,
+    onExport,
+    id,
   } = props;
 
   const [paginationModel, setPaginationModel] = React.useState({
@@ -84,6 +86,9 @@ const DataTable = (props: any) => {
               <Button
                 color="inherit"
                 size="small"
+                onClick={() => {
+                  isExport(id);
+                }}
                 startIcon={
                   <SvgIcon fontSize="small">
                     <ArrowDownOnSquareIcon />

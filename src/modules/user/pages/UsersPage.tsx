@@ -10,6 +10,7 @@ import DataTable from '@/components/ui/DataTable';
 import { DashboardLayout } from '@/layouts/dashboard/layout';
 import {
   useDeleteUserMutation,
+  useExportUsersMutation,
   useGetUsersQuery,
 } from '@/store/user';
 import Link from 'next/link';
@@ -64,6 +65,7 @@ const UsersPage = () => {
 
   const { data } = useGetUsersQuery(query);
   const [deleteUser] = useDeleteUserMutation();
+  const [exportUsers] = useExportUsersMutation();
 
   return (
     <Box
@@ -90,7 +92,7 @@ const UsersPage = () => {
               deleteUser(id);
             }}
             placeHolder={'Search by email'}
-            isExport={true}
+            isExport={exportUsers}
           />
         </Stack>
       </Container>

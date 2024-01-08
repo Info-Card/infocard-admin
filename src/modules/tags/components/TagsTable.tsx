@@ -1,5 +1,9 @@
 import { useState } from 'react';
-import { useDeleteTagMutation, useGetTagsQuery } from '@/store/tags';
+import {
+  useDeleteTagMutation,
+  useExportTagMutation,
+  useGetTagsQuery,
+} from '@/store/tags';
 import DataTable from '@/components/ui/DataTable';
 import { Button, Stack, SvgIcon, Typography } from '@mui/material';
 import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
@@ -15,6 +19,7 @@ const TagsTable = ({ batch }: any) => {
 
   const { data } = useGetTagsQuery({ ...query, batch });
   const [deleteTag] = useDeleteTagMutation();
+  const [exportTag] = useExportTagMutation();
   const columns = [
     {
       field: 'id',
@@ -41,7 +46,7 @@ const TagsTable = ({ batch }: any) => {
       },
     },
   ];
-
+  console.log(batch);
   return (
     <DataTable
       title={
@@ -79,7 +84,10 @@ const TagsTable = ({ batch }: any) => {
       onDelete={(id: any) => {
         deleteTag(id);
       }}
-      isExport={true}
+      isExport={(id: any) => {
+        exportTag(id);
+      }}
+      id={batch}
     />
   );
 };

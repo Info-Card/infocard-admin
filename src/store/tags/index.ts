@@ -46,6 +46,15 @@ export const tagSlice = apiSlice.injectEndpoints({
       },
       invalidatesTags: ['Tag'],
     }),
+    exportTag: builder.mutation({
+      query: (id) => {
+        return {
+          url: `${TAGS_URL}/export-csv/${id}`,
+          method: 'GET',
+        };
+      },
+      invalidatesTags: ['Tag'],
+    }),
   }),
 });
 
@@ -55,4 +64,5 @@ export const {
   useCreateTagMutation,
   useUpdateTagMutation,
   useDeleteTagMutation,
+  useExportTagMutation,
 } = tagSlice;
