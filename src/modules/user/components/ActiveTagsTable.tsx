@@ -34,10 +34,7 @@ const ActiveTagCards = ({ userId }: any) => {
       field: 'id',
       flex: 1,
     },
-    {
-      field: 'customId',
-      flex: 1,
-    },
+
     {
       field: 'user',
       flex: 1,
