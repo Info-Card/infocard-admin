@@ -2,8 +2,10 @@ import { useState } from 'react';
 import {
   Avatar,
   Box,
+  Button,
   Container,
   Stack,
+  SvgIcon,
   Typography,
 } from '@mui/material';
 import DataTable from '@/components/ui/DataTable';
@@ -17,6 +19,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { getInitials } from '@/utils/get-initials';
 import { getImageUrl } from '@/utils/get-Image-url';
+import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
 
 const columns = [
   {
@@ -77,8 +80,22 @@ const UsersPage = () => {
       <Container maxWidth="xl">
         <Stack spacing={3}>
           <Stack direction="row" spacing={1}>
-            <Typography variant="h4">Users</Typography>
+            <Typography variant="h4">Uesrs</Typography>
+            <Link href="/users/add">
+              <Button
+                startIcon={
+                  <SvgIcon fontSize="small">
+                    <PlusIcon />
+                  </SvgIcon>
+                }
+                variant="contained"
+                size="small"
+              >
+                Add
+              </Button>
+            </Link>
           </Stack>
+
           <DataTable
             rows={data?.results}
             rowCount={data?.totalResults}
@@ -92,7 +109,7 @@ const UsersPage = () => {
               deleteUser(id);
             }}
             placeHolder={'Search by email'}
-            isExport={exportUsers}
+            onExport={exportUsers}
           />
         </Stack>
       </Container>

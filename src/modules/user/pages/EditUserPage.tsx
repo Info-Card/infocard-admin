@@ -3,6 +3,7 @@ import { DashboardLayout } from '@/layouts/dashboard/layout';
 import { useParams } from 'next/navigation';
 import { useGetUserQuery } from '@/store/user';
 import UserForm from '../components/UserForm';
+import ActiveTagCards from '../components/ActiveTagsTable';
 
 const EditUserPage = () => {
   const params = useParams();
@@ -24,6 +25,7 @@ const EditUserPage = () => {
         <Container maxWidth="xl">
           <Typography variant="h4">Update User</Typography>
           <UserForm user={data} />
+          <ActiveTagCards userId={params?.id} />
         </Container>
       </Box>
     </>

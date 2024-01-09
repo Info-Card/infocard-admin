@@ -28,7 +28,6 @@ const DataTable = (props: any) => {
     onEdit,
     onDelete,
     placeHolder,
-    isExport,
     onExport,
     id,
   } = props;
@@ -82,12 +81,12 @@ const DataTable = (props: any) => {
               sx={{ maxWidth: 500 }}
               onChange={(e) => debouncedSearch(e.target.value)}
             />
-            {isExport ? (
+            {onExport ? (
               <Button
                 color="inherit"
                 size="small"
                 onClick={() => {
-                  isExport(id);
+                  onExport(id ? id : '');
                 }}
                 startIcon={
                   <SvgIcon fontSize="small">
