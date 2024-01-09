@@ -9,7 +9,8 @@ import { Button, Stack, SvgIcon, Typography } from '@mui/material';
 import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
-
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 const TagsTable = ({ batch }: any) => {
   const router = useRouter();
   const [query, setQuery] = useState({
@@ -22,27 +23,15 @@ const TagsTable = ({ batch }: any) => {
   const [exportTag] = useExportTagMutation();
   const columns = [
     {
-      field: 'id',
-      flex: 1,
-    },
-    {
-      field: 'customId',
-      flex: 1,
-    },
-    {
-      field: 'user',
+      field: 'url',
       flex: 1,
     },
 
     {
-      field: 'createdAt',
+      field: 'user',
       flex: 1,
       renderCell: ({ row }: any) => {
-        return (
-          <Stack direction="row" spacing={1}>
-            {row.createdAt.split('T')[0]}
-          </Stack>
-        );
+        return <>{row.user ? <CheckIcon /> : <CloseIcon />}</>;
       },
     },
   ];
@@ -84,7 +73,7 @@ const TagsTable = ({ batch }: any) => {
       onDelete={(id: any) => {
         deleteTag(id);
       }}
-      isExport={(id: any) => {
+      onExport={(id: any) => {
         exportTag(id);
       }}
       id={batch}
