@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import { useSearchParams } from 'next/navigation';
 import CustomField from '@/components/ui/CustomField';
 import { useAuth } from '@/hooks/use-auth';
+import { toast } from 'react-toastify';
 
 interface FormData {
   email: string;
@@ -35,7 +36,12 @@ const LoginPage = () => {
   });
 
   const onSubmit = async (data: FormData) => {
-    await login(data);
+    try {
+      await login(data);
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error?.data?.message || error.error);
+    }
   };
 
   return (

@@ -45,13 +45,6 @@ const App = (props: any) => {
   return (
     <Provider store={store}>
       <CacheProvider value={emotionCache}>
-        <Head>
-          <title>Info Card Admin</title>
-          <meta
-            name="viewport"
-            content="initial-scale=1, width=device-width"
-          />
-        </Head>
         <AuthProvider>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <ThemeProvider theme={theme}>
