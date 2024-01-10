@@ -2,8 +2,10 @@ import { useState } from 'react';
 import {
   Avatar,
   Box,
+  Button,
   Container,
   Stack,
+  SvgIcon,
   Typography,
 } from '@mui/material';
 import DataTable from '@/components/ui/DataTable';
@@ -11,20 +13,24 @@ import { DashboardLayout } from '@/layouts/dashboard/layout';
 import {
   useDeleteUserMutation,
   useGetUsersQuery,
+  useLazyExportUsersQuery,
 } from '@/store/user';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { getInitials } from '@/utils/get-initials';
 import { getImageUrl } from '@/utils/get-Image-url';
+import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
+import { downloadBlob } from '@/utils/downloadBlob';
 
 const columns = [
   {
+    headerName: 'Name',
     field: 'id',
-    flex: 2,
+    width: 300,
     renderCell: ({ row }: any) => {
       return (
         <Link
-          href={`/users/edit/${row.id}`}
+          href={`/users/${row.id}`}
           style={{ textDecoration: 'none', color: 'black' }}
         >
           <Stack direction="row" spacing={1}>
@@ -42,14 +48,17 @@ const columns = [
     },
   },
   {
+    headerName: 'Username',
     field: 'username',
-    flex: 1,
+    flex: 2,
   },
   {
+    headerName: 'Email',
     field: 'email',
-    flex: 1,
+    flex: 4,
   },
   {
+    headerName: 'Role',
     field: 'role',
     flex: 1,
   },
@@ -64,6 +73,33 @@ const UsersPage = () => {
 
   const { data } = useGetUsersQuery(query);
   const [deleteUser] = useDeleteUserMutation();
+  const [exportUsers] = useLazyExportUsersQuery();
+
+  const handleViewUser = (id: any) => {
+    router.replace(`/users/${id}`);
+  };
+
+  const handleEditUser = (id: any) => {
+    router.replace(`/users/edit/${id}`);
+  };
+
+  const handleDeleteUser = (id: any) => {
+    deleteUser(id);
+  };
+
+  const handleExportUsers = async () => {
+    try {
+      const res: any = await exportUsers({}).unwrap();
+
+      downloadBlob(
+        res.data,
+        'users.csv',
+        'text/csv; name="users.csv"'
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Box
@@ -76,20 +112,31 @@ const UsersPage = () => {
         <Stack spacing={3}>
           <Stack direction="row" spacing={1}>
             <Typography variant="h4">Users</Typography>
+            <Link href="/users/add">
+              <Button
+                startIcon={
+                  <SvgIcon fontSize="small">
+                    <PlusIcon />
+                  </SvgIcon>
+                }
+                variant="contained"
+                size="small"
+              >
+                Add
+              </Button>
+            </Link>
           </Stack>
           <DataTable
+            placeholder="Search by email"
             rows={data?.results}
             rowCount={data?.totalResults}
             columns={columns}
             query={query}
             setQuery={setQuery}
-            onEdit={(id: any) => {
-              router.replace(`/users/edit/${id}`);
-            }}
-            onDelete={(id: any) => {
-              deleteUser(id);
-            }}
-            placeHolder={'Search by email'}
+            onView={handleViewUser}
+            onEdit={handleEditUser}
+            onDelete={handleDeleteUser}
+            onExport={handleExportUsers}
           />
         </Stack>
       </Container>

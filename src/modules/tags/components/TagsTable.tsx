@@ -1,85 +1,151 @@
 import { useState } from 'react';
-import { useDeleteTagMutation, useGetTagsQuery } from '@/store/tags';
+import {
+  useDeleteTagMutation,
+  useGetTagsQuery,
+  useLazyExportTagsQuery,
+  useLazyUnLinkTagQuery,
+} from '@/store/tags';
 import DataTable from '@/components/ui/DataTable';
 import { Button, Stack, SvgIcon, Typography } from '@mui/material';
 import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import { downloadBlob } from '@/utils/downloadBlob';
+import useDialog from '@/components/hooks/useDialog';
+import LinkTagDialog from './LinkTagDialog';
 
-const TagsTable = ({ batch }: any) => {
+const TagsTable = ({ batch, user }: any) => {
   const router = useRouter();
   const [query, setQuery] = useState({
     page: 1,
     limit: 10,
   });
 
-  const { data } = useGetTagsQuery({ ...query, batch });
+  const { data, refetch } = useGetTagsQuery({
+    ...query,
+    batch,
+    user,
+  });
   const [deleteTag] = useDeleteTagMutation();
+  const [unlinkTag] = useLazyUnLinkTagQuery();
+  const [exportTags] = useLazyExportTagsQuery();
+  const linkTagDialog = useDialog();
+
   const columns = [
     {
-      field: 'id',
+      headerName: 'URL',
+      field: 'url',
       flex: 1,
     },
     {
-      field: 'customId',
-      flex: 1,
-    },
-    {
+      headerName: 'Active',
       field: 'user',
-      flex: 1,
-    },
-
-    {
-      field: 'createdAt',
-      flex: 1,
+      width: 100,
       renderCell: ({ row }: any) => {
-        return (
-          <Stack direction="row" spacing={1}>
-            {row.createdAt.split('T')[0]}
-          </Stack>
+        return <>{row.user ? <CheckIcon /> : <CloseIcon />}</>;
+      },
+    },
+    {
+      headerName: '',
+      field: 'id',
+      width: 100,
+      renderCell: ({ row }: any) => {
+        return row.user ? (
+          <Button
+            onClick={() => {
+              handleUnlinkTag(row.id);
+            }}
+          >
+            Unlink
+          </Button>
+        ) : (
+          <></>
         );
       },
     },
   ];
 
+  const handleEditTag = (id: any) => {
+    const foundElement = data.results.find(
+      (element: any) => element.id === id
+    );
+    if (foundElement.customId) {
+      router.push(`/tags/edit/${id}`);
+    } else {
+      toast.error('You are not allowed to edit this tag.');
+    }
+  };
+
+  const handleDeleteTag = (id: any) => {
+    deleteTag(id);
+  };
+
+  const handleUnlinkTag = async (id: any) => {
+    try {
+      await unlinkTag(id);
+      refetch();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleExportTags = async () => {
+    try {
+      const res: any = await exportTags({ batch, user }).unwrap();
+      downloadBlob(res.data, 'tags.csv', 'text/csv; name="tags.csv"');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <DataTable
-      title={
-        <Stack direction="row" spacing={1} alignItems="center">
-          <Typography variant="h6">Tags</Typography>
-          <Button
-            startIcon={
-              <SvgIcon fontSize="small">
-                <PlusIcon />
-              </SvgIcon>
-            }
-            variant="contained"
-            size="small"
-            onClick={() => router.push(`/tags/add?batch=${batch}`)}
-          >
-            Add
-          </Button>
-        </Stack>
-      }
-      rows={data?.results}
-      rowCount={data?.totalResults}
-      columns={columns}
-      query={query}
-      setQuery={setQuery}
-      onEdit={(id: any) => {
-        const foundElement = data.results.find(
-          (element: any) => element.id === id
-        );
-        if (foundElement.customId) {
-          router.push(`/tags/edit/${id}`);
-        } else {
-          toast.error('You are not allowed to edit this tag.');
+    <>
+      <DataTable
+        title={
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Typography variant="h6">Tags</Typography>
+
+            <Button
+              startIcon={
+                <SvgIcon fontSize="small">
+                  <PlusIcon />
+                </SvgIcon>
+              }
+              variant="contained"
+              size="small"
+              onClick={() => {
+                if (user) {
+                  linkTagDialog.open();
+                } else {
+                  router.push(`/tags/add?batch=${batch}`);
+                }
+              }}
+            >
+              Add
+            </Button>
+          </Stack>
         }
-      }}
-      onDelete={(id: any) => {
-        deleteTag(id);
-      }}
-    />
+        rows={data?.results}
+        rowCount={data?.totalResults}
+        columns={columns}
+        query={query}
+        setQuery={setQuery}
+        onEdit={!user ? handleEditTag : undefined}
+        onDelete={!user ? handleDeleteTag : undefined}
+        onExport={handleExportTags}
+      />
+      {linkTagDialog.isOpen && (
+        <LinkTagDialog
+          onClose={() => {
+            linkTagDialog.close();
+            refetch();
+          }}
+          user={user}
+        />
+      )}
+    </>
   );
 };
 

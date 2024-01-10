@@ -11,6 +11,14 @@ export const tagSlice = apiSlice.injectEndpoints({
       providesTags: ['Tag'],
       keepUnusedDataFor: 5,
     }),
+    getMyTags: builder.query({
+      query: ({ keyword, pageNumber }) => ({
+        url: `${TAGS_URL}/my-tags`,
+        params: { keyword, pageNumber },
+      }),
+      keepUnusedDataFor: 5,
+      providesTags: ['Tag'],
+    }),
     getTag: builder.query({
       query: (id) => ({
         url: `${TAGS_URL}/${id}`,
@@ -46,13 +54,35 @@ export const tagSlice = apiSlice.injectEndpoints({
       },
       invalidatesTags: ['Tag'],
     }),
+    unLinkTag: builder.query({
+      query: (tagId) => ({
+        url: `${TAGS_URL}/unlink/${tagId}`,
+      }),
+    }),
+    linkTag: builder.query({
+      query: ({ user, tagId }) => ({
+        url: `${TAGS_URL}/link/${tagId}`,
+        params: { user },
+      }),
+    }),
+    exportTags: builder.query({
+      query: (params) => ({
+        url: `${TAGS_URL}/export-csv`,
+        params,
+        responseHandler: 'text',
+      }),
+    }),
   }),
 });
 
 export const {
   useGetTagsQuery,
+  useGetMyTagsQuery,
   useGetTagQuery,
   useCreateTagMutation,
   useUpdateTagMutation,
   useDeleteTagMutation,
+  useLazyUnLinkTagQuery,
+  useLazyLinkTagQuery,
+  useLazyExportTagsQuery,
 } = tagSlice;
