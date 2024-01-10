@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import {
   useDeleteTagMutation,
-  useExportTagMutation,
   useGetTagsQuery,
+  useLazyExportTagsQuery,
+  useLazyUnLinkTagQuery,
 } from '@/store/tags';
 import DataTable from '@/components/ui/DataTable';
 import { Button, Stack, SvgIcon, Typography } from '@mui/material';
@@ -11,73 +12,140 @@ import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-const TagsTable = ({ batch }: any) => {
+import { downloadBlob } from '@/utils/downloadBlob';
+import useDialog from '@/components/hooks/useDialog';
+import LinkTagDialog from './LinkTagDialog';
+
+const TagsTable = ({ batch, user }: any) => {
   const router = useRouter();
   const [query, setQuery] = useState({
     page: 1,
     limit: 10,
   });
 
-  const { data } = useGetTagsQuery({ ...query, batch });
+  const { data, refetch } = useGetTagsQuery({
+    ...query,
+    batch,
+    user,
+  });
   const [deleteTag] = useDeleteTagMutation();
-  const [exportTag] = useExportTagMutation();
+  const [unlinkTag] = useLazyUnLinkTagQuery();
+  const [exportTags] = useLazyExportTagsQuery();
+  const linkTagDialog = useDialog();
+
   const columns = [
     {
+      headerName: 'URL',
       field: 'url',
       flex: 1,
     },
-
     {
+      headerName: 'Active',
       field: 'user',
-      flex: 1,
+      width: 100,
       renderCell: ({ row }: any) => {
         return <>{row.user ? <CheckIcon /> : <CloseIcon />}</>;
       },
     },
-  ];
-  console.log(batch);
-  return (
-    <DataTable
-      title={
-        <Stack direction="row" spacing={1} alignItems="center">
-          <Typography variant="h6">Tags</Typography>
+    {
+      headerName: '',
+      field: 'id',
+      width: 100,
+      renderCell: ({ row }: any) => {
+        return row.user ? (
           <Button
-            startIcon={
-              <SvgIcon fontSize="small">
-                <PlusIcon />
-              </SvgIcon>
-            }
-            variant="contained"
-            size="small"
-            onClick={() => router.push(`/tags/add?batch=${batch}`)}
+            onClick={() => {
+              handleUnlinkTag(row.id);
+            }}
           >
-            Add
+            Unlink
           </Button>
-        </Stack>
-      }
-      rows={data?.results}
-      rowCount={data?.totalResults}
-      columns={columns}
-      query={query}
-      setQuery={setQuery}
-      onEdit={(id: any) => {
-        const foundElement = data.results.find(
-          (element: any) => element.id === id
+        ) : (
+          <></>
         );
-        if (foundElement.customId) {
-          router.push(`/tags/edit/${id}`);
-        } else {
-          toast.error('You are not allowed to edit this tag.');
+      },
+    },
+  ];
+
+  const handleEditTag = (id: any) => {
+    const foundElement = data.results.find(
+      (element: any) => element.id === id
+    );
+    if (foundElement.customId) {
+      router.push(`/tags/edit/${id}`);
+    } else {
+      toast.error('You are not allowed to edit this tag.');
+    }
+  };
+
+  const handleDeleteTag = (id: any) => {
+    deleteTag(id);
+  };
+
+  const handleUnlinkTag = async (id: any) => {
+    try {
+      await unlinkTag(id);
+      refetch();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleExportTags = async () => {
+    try {
+      const res: any = await exportTags({ batch, user }).unwrap();
+      downloadBlob(res.data, 'tags.csv', 'text/csv; name="tags.csv"');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <>
+      <DataTable
+        title={
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Typography variant="h6">Tags</Typography>
+
+            <Button
+              startIcon={
+                <SvgIcon fontSize="small">
+                  <PlusIcon />
+                </SvgIcon>
+              }
+              variant="contained"
+              size="small"
+              onClick={() => {
+                if (user) {
+                  linkTagDialog.open();
+                } else {
+                  router.push(`/tags/add?batch=${batch}`);
+                }
+              }}
+            >
+              Add
+            </Button>
+          </Stack>
         }
-      }}
-      onDelete={(id: any) => {
-        deleteTag(id);
-      }}
-      onExport={(id: any) => {
-        exportTag(id);
-      }}
-      id={batch}
-    />
+        rows={data?.results}
+        rowCount={data?.totalResults}
+        columns={columns}
+        query={query}
+        setQuery={setQuery}
+        onEdit={!user ? handleEditTag : undefined}
+        onDelete={!user ? handleDeleteTag : undefined}
+        onExport={handleExportTags}
+      />
+      {linkTagDialog.isOpen && (
+        <LinkTagDialog
+          onClose={() => {
+            linkTagDialog.close();
+            refetch();
+          }}
+          user={user}
+        />
+      )}
+    </>
   );
 };
 

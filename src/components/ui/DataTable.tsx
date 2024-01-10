@@ -1,42 +1,97 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import {
   Button,
   Card,
+  IconButton,
   InputAdornment,
   OutlinedInput,
   Stack,
   SvgIcon,
 } from '@mui/material';
-import MagnifyingGlassIcon from '@heroicons/react/24/solid/MagnifyingGlassIcon';
-import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
-import FunnelIcon from '@heroicons/react/24/solid/FunnelIcon';
 import { debounce } from 'lodash';
 import { filterNotNullOrEmptyFields } from '@/utils/filter-not-null-or-empty-fields';
-import PencilIcon from '@heroicons/react/24/solid/PencilIcon';
-import TrashIcon from '@heroicons/react/24/solid/TrashIcon';
 import Swal from 'sweetalert2';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import SearchIcon from '@mui/icons-material/Search';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 
-const DataTable = (props: any) => {
-  const {
-    title,
-    rows,
-    rowCount,
-    columns,
-    query,
-    setQuery,
-    onEdit,
-    onDelete,
-    placeHolder,
-    onExport,
-    id,
-  } = props;
+const RowActions = ({ id, onView, onEdit, onDelete }: any) => {
+  const handleDelete = async () => {
+    const result = await Swal.fire({
+      title: '<strong>Warning</strong>',
+      icon: 'warning',
+      html: 'Are you sure you want to delete this?',
+      showCloseButton: true,
+      showCancelButton: true,
+      focusConfirm: false,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+    });
 
-  const [paginationModel, setPaginationModel] = React.useState({
-    pageSize: query?.limit || 10,
-    page: (query?.page || 0) - 1,
+    if (result.isConfirmed && onDelete) {
+      onDelete(id);
+    }
+  };
+
+  return (
+    <Stack direction="row" gap={0}>
+      {onView && (
+        <IconButton onClick={() => onView(id)}>
+          <VisibilityIcon fontSize="small" />
+        </IconButton>
+      )}
+      {onEdit && (
+        <IconButton onClick={() => onEdit(id)}>
+          <EditIcon fontSize="small" />
+        </IconButton>
+      )}
+      {onDelete && (
+        <IconButton onClick={handleDelete}>
+          <DeleteIcon fontSize="small" style={{ color: 'red' }} />
+        </IconButton>
+      )}
+    </Stack>
+  );
+};
+
+// TypeScript type for props
+interface DataTableProps {
+  title?: any;
+  placeholder?: string;
+  rows: any[];
+  rowCount: number;
+  columns: any[];
+  query: any;
+  setQuery: (query: any) => void;
+  onView?: (id: string) => void;
+  onEdit?: (id: string) => void;
+  onDelete?: (id: string) => void;
+  onExport?: () => void;
+  onFilter?: () => void;
+}
+
+const DataTable: React.FC<DataTableProps> = ({
+  title,
+  placeholder,
+  rows,
+  rowCount,
+  columns,
+  query,
+  setQuery,
+  onView,
+  onEdit,
+  onDelete,
+  onExport,
+  onFilter,
+}) => {
+  const [paginationModel, setPaginationModel] = useState({
+    pageSize: query.limit || 10,
+    page: query.page ? query.page - 1 : 0,
   });
-
   useEffect(() => {
     setQuery({
       page: (paginationModel.page || 0) + 1,
@@ -54,115 +109,94 @@ const DataTable = (props: any) => {
     );
   }, 1000);
 
+  const actionColumn = {
+    field: 'Actions',
+    width: 140,
+    renderCell: ({ row }: any) => (
+      <RowActions
+        id={row.id}
+        onView={onView}
+        onEdit={onEdit}
+        onDelete={onDelete}
+      />
+    ),
+  };
+
   return (
-    <Stack spacing={3}>
-      <Card sx={{ p: 2 }}>
-        <Stack
-          alignItems="center"
-          direction="row"
-          justifyContent="space-between"
-          spacing={1}
-          sx={{ mb: 1 }}
-        >
-          {title}
-          <div />
-          <Stack alignItems="center" direction="row">
-            <OutlinedInput
-              defaultValue=""
-              placeholder={placeHolder ? placeHolder : 'Search'}
+    <Card sx={{ p: 2 }}>
+      <Stack
+        alignItems="center"
+        direction="row"
+        justifyContent="space-between"
+        spacing={1}
+        sx={{ mb: 1 }}
+      >
+        {title}
+        <div />
+        <Stack alignItems="center" direction="row" gap={1}>
+          <OutlinedInput
+            defaultValue=""
+            placeholder={placeholder || 'Search'}
+            size="small"
+            startAdornment={
+              <InputAdornment position="start">
+                <SvgIcon fontSize="small">
+                  <SearchIcon />
+                </SvgIcon>
+              </InputAdornment>
+            }
+            sx={{ maxWidth: 500 }}
+            onChange={(e) => debouncedSearch(e.target.value)}
+          />
+          {onFilter && (
+            <Button
+              color="inherit"
               size="small"
-              startAdornment={
-                <InputAdornment position="start">
-                  <SvgIcon color="action" fontSize="small">
-                    <MagnifyingGlassIcon />
-                  </SvgIcon>
-                </InputAdornment>
+              onClick={onFilter}
+              startIcon={
+                <SvgIcon fontSize="small">
+                  <FilterAltIcon />
+                </SvgIcon>
               }
-              sx={{ maxWidth: 500 }}
-              onChange={(e) => debouncedSearch(e.target.value)}
-            />
-            {onExport ? (
-              <Button
-                color="inherit"
-                size="small"
-                onClick={() => {
-                  onExport(id ? id : '');
-                }}
-                startIcon={
-                  <SvgIcon fontSize="small">
-                    <ArrowDownOnSquareIcon />
-                  </SvgIcon>
-                }
-              >
-                Export
-              </Button>
-            ) : (
-              ''
-            )}
-          </Stack>
+            >
+              Filter
+            </Button>
+          )}
+          {onExport && (
+            <Button
+              color="inherit"
+              size="small"
+              onClick={onExport}
+              startIcon={
+                <SvgIcon fontSize="small">
+                  <CloudDownloadIcon />
+                </SvgIcon>
+              }
+            >
+              Export
+            </Button>
+          )}
         </Stack>
-        <DataGrid
-          autoHeight
-          rows={rows || []}
-          columns={columns.concat({
-            field: 'actions',
-            renderCell: ({ id }: any) => {
-              return (
-                <>
-                  {onEdit && (
-                    <span
-                      onClick={() => {
-                        onEdit(id);
-                      }}
-                    >
-                      <SvgIcon fontSize="small">
-                        <PencilIcon />
-                      </SvgIcon>
-                    </span>
-                  )}
-                  {onDelete && (
-                    <span
-                      style={{
-                        marginLeft: 'auto',
-                        marginRight: '20px',
-                      }}
-                      onClick={() => {
-                        Swal.fire({
-                          title: '<strong>Warning</strong>',
-                          icon: 'warning',
-                          html: 'Are you sure you want to delete this?',
-                          showCloseButton: true,
-                          showCancelButton: true,
-                          focusConfirm: false,
-                          confirmButtonText: 'Yes',
-                          cancelButtonText: 'No',
-                        }).then(async (result: any) => {
-                          if (result.isConfirmed) {
-                            onDelete(id);
-                          }
-                        });
-                      }}
-                    >
-                      <SvgIcon fontSize="small">
-                        <TrashIcon style={{ color: 'red' }} />
-                      </SvgIcon>
-                    </span>
-                  )}
-                </>
-              );
-            },
-          })}
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          disableRowSelectionOnClick
-          pageSizeOptions={[10, 25, 50]}
-          pagination // Enable pagination
-          paginationMode="server" // Set pagination mode to server
-          rowCount={rowCount || 0} // Set the total number of rows
-          sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-        />
-      </Card>
-    </Stack>
+      </Stack>
+      <DataGrid
+        autoHeight
+        rows={rows || []}
+        columns={
+          !onView && !onEdit && !onDelete
+            ? columns
+            : columns.concat(actionColumn)
+        }
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+        disableRowSelectionOnClick
+        pageSizeOptions={[10, 25, 50]}
+        pagination
+        paginationMode="server"
+        rowCount={rowCount || 0}
+        sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+      />
+    </Card>
   );
 };
+
 export default DataTable;

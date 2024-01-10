@@ -54,30 +54,23 @@ export const tagSlice = apiSlice.injectEndpoints({
       },
       invalidatesTags: ['Tag'],
     }),
-    exportTag: builder.mutation({
-      query: (id) => {
-        return {
-          url: `${TAGS_URL}/export-csv/${id}`,
-          method: 'GET',
-        };
-      },
-      invalidatesTags: ['Tag'],
-    }),
-
     unLinkTag: builder.query({
       query: (tagId) => ({
         url: `${TAGS_URL}/unlink/${tagId}`,
       }),
-      keepUnusedDataFor: 5,
     }),
-
     linkTag: builder.query({
-      query: ({ userId, tagId }) => ({
+      query: ({ user, tagId }) => ({
         url: `${TAGS_URL}/link/${tagId}`,
-        params: { userId },
+        params: { user },
       }),
-      providesTags: ['Tag'],
-      keepUnusedDataFor: 5,
+    }),
+    exportTags: builder.query({
+      query: (params) => ({
+        url: `${TAGS_URL}/export-csv`,
+        params,
+        responseHandler: 'text',
+      }),
     }),
   }),
 });
@@ -89,7 +82,7 @@ export const {
   useCreateTagMutation,
   useUpdateTagMutation,
   useDeleteTagMutation,
-  useExportTagMutation,
-  useUnLinkTagQuery,
+  useLazyUnLinkTagQuery,
   useLazyLinkTagQuery,
+  useLazyExportTagsQuery,
 } = tagSlice;

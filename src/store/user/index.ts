@@ -46,14 +46,12 @@ export const userSlice = apiSlice.injectEndpoints({
       },
       invalidatesTags: ['User'],
     }),
-    exportUsers: builder.mutation({
-      query(id) {
-        return {
-          url: `${USERS_URL}/export-csv`,
-          method: 'GET',
-        };
-      },
-      invalidatesTags: ['User'],
+    exportUsers: builder.query({
+      query: (params) => ({
+        url: `${USERS_URL}/export-csv`,
+        params,
+        responseHandler: 'text',
+      }),
     }),
   }),
 });
@@ -64,5 +62,5 @@ export const {
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
-  useExportUsersMutation,
+  useLazyExportUsersQuery,
 } = userSlice;
