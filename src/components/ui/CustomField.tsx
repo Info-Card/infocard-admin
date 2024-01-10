@@ -20,7 +20,7 @@ interface CustomFieldProps {
   type?: any;
   accept?: string;
   errors?: Record<string, any>;
-  setValue?: (name: string, value: any) => void;
+  setValue?: any;
   hidden?: boolean;
   options?: Array<{ label: string; value: any }>;
   inputProps?: any;
