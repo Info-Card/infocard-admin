@@ -103,6 +103,9 @@ const BatchesPage = () => {
             columns={columns}
             query={query}
             setQuery={setQuery}
+            onView={(id: any) => {
+              router.replace(`/batches/${id}`);
+            }}
             onEdit={(id: any) => {
               router.replace(`/batches/edit/${id}`);
             }}
