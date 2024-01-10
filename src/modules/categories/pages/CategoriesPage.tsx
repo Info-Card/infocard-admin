@@ -81,6 +81,9 @@ const CategoriesPage = () => {
             columns={columns}
             query={query}
             setQuery={setQuery}
+            onView={(id: any) => {
+              router.replace(`/categories/${id}`);
+            }}
             onEdit={(id: any) => {
               router.replace(`/categories/edit/${id}`);
             }}
