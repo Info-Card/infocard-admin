@@ -15,6 +15,7 @@ const UserOverviewTab = ({ user }: any) => {
             alt="Image"
             width={100}
             height={100}
+            priority
           />
           <Stack gap={2}>
             <Typography variant="h6">{user?.live?.name}</Typography>
