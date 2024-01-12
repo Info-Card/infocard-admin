@@ -94,7 +94,7 @@ const TagsTable = ({ batch, user }: any) => {
   const handleExportTags = async () => {
     try {
       const res: any = await exportTags({ batch, user }).unwrap();
-      downloadBlob(res.data, 'tags.csv', 'text/csv; name="tags.csv"');
+      downloadBlob(res, 'tags.csv', 'text/csv; name="tags.csv"');
     } catch (error) {
       console.log(error);
     }
