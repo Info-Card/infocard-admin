@@ -91,11 +91,7 @@ const UsersPage = () => {
     try {
       const res: any = await exportUsers({}).unwrap();
 
-      downloadBlob(
-        res.data,
-        'users.csv',
-        'text/csv; name="users.csv"'
-      );
+      downloadBlob(res, 'users.csv', 'text/csv; name="users.csv"');
     } catch (error) {
       console.log(error);
     }
