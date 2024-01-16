@@ -29,8 +29,8 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      email: 'zubair@xertk.com',
-      password: 'asdf1122',
+      email: '',
+      password: '',
     },
     resolver: yupResolver(schema),
   });
@@ -76,6 +76,7 @@ const LoginPage = () => {
                 label="Email"
                 control={control}
                 errors={errors}
+                autoComplete="off"
               />
               <CustomField
                 name="password"
@@ -83,6 +84,7 @@ const LoginPage = () => {
                 type="password"
                 control={control}
                 errors={errors}
+                autoComplete="off"
               />
               <Button
                 fullWidth
