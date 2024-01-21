@@ -25,6 +25,7 @@ interface CustomFieldProps {
   options?: Array<{ label: string; value: any }>;
   inputProps?: any;
   disabled?: boolean;
+  autoComplete?: any;
 }
 
 const CustomField: React.FC<CustomFieldProps> = ({

@@ -28,10 +28,13 @@ const baseQueryWithReauth: BaseQueryFn<
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
-  if (result.error && result.error.status === 401) {
-    const tokens = JSON.parse(localStorage.getItem('tokens') || '');
+  if (
+    result.error &&
+    result.error.status === 401 &&
+    localStorage.getItem('tokens')
+  ) {
+    const tokens = JSON.parse(localStorage.getItem('tokens') || ' ');
     const refreshToken = tokens.refresh.token || '';
-
     const refreshResult: any = await baseQuery(
       {
         url: '/v1/auth/refresh-tokens',

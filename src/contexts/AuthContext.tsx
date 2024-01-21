@@ -63,6 +63,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const handleLogin = async (params: any) => {
     try {
       const res = await login(params).unwrap();
+      if (res.user.role !== 'admin') {
+        toast.error('Unauthorized: Only admins are allowed.');
+        throw new Error('Unauthorized: Only admins are allowed.');
+      }
       setUser(res.user);
       localStorage.setItem('user', JSON.stringify(res.user));
       localStorage.setItem('tokens', JSON.stringify(res.tokens));
