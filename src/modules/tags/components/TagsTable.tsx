@@ -4,9 +4,16 @@ import {
   useGetTagsQuery,
   useLazyExportTagsQuery,
   useLazyUnLinkTagQuery,
+  useUpdateTagMutation,
 } from '@/store/tags';
 import DataTable from '@/components/ui/DataTable';
-import { Button, Stack, SvgIcon, Typography } from '@mui/material';
+import {
+  Button,
+  Stack,
+  SvgIcon,
+  Switch,
+  Typography,
+} from '@mui/material';
 import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
@@ -29,10 +36,11 @@ const TagsTable = ({ batch, user }: any) => {
     user,
   });
   const [deleteTag] = useDeleteTagMutation();
+  const [updateTag] = useUpdateTagMutation();
   const [unlinkTag] = useLazyUnLinkTagQuery();
   const [exportTags] = useLazyExportTagsQuery();
   const linkTagDialog = useDialog();
-
+  updateTag;
   const columns = [
     {
       headerName: 'URL',
@@ -65,6 +73,21 @@ const TagsTable = ({ batch, user }: any) => {
         );
       },
     },
+    {
+      headerName: 'Status',
+      field: 'status',
+      width: 100,
+      renderCell: ({ row }: any) => {
+        return (
+          <Switch
+            checked={row.status}
+            onChange={(e, c) => {
+              handleStatusChange(row.id, c);
+            }}
+          ></Switch>
+        );
+      },
+    },
   ];
 
   const handleEditTag = (id: any) => {
@@ -88,6 +111,24 @@ const TagsTable = ({ batch, user }: any) => {
       refetch();
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleStatusChange = async (id: any, event: any) => {
+    console.log(id, event);
+    try {
+      const updatStatus = {
+        status: event,
+      };
+
+      await updateTag({
+        id,
+        body: updatStatus,
+      }).unwrap();
+      toast.success('Tag updated');
+      refetch();
+    } catch (error: any) {
+      toast.error(error?.data?.message || error.error);
     }
   };
 
