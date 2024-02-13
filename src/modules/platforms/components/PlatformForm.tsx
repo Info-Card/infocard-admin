@@ -53,6 +53,7 @@ const PlatformForm = ({ platform, category }: any) => {
       iOSBaseURL: platform?.iosBaseURL || '',
       androidBaseURL: platform?.androidBaseURL || '',
       type: platform?.type || '',
+      image: platform?.image || '',
     },
     resolver: yupResolver(schema),
   });
