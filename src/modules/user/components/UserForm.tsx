@@ -17,13 +17,8 @@ interface FormData {
   username: string;
   email: string;
   role: string;
+  password?: string;
 }
-
-const schema = yup.object().shape({
-  username: yup.string().required(),
-  email: yup.string().required(),
-  role: yup.string().required(),
-});
 
 const UserForm = ({ user }: any) => {
   const router = useRouter();
@@ -33,6 +28,13 @@ const UserForm = ({ user }: any) => {
   const [updateUser, { isLoading: updateLoading }] =
     useUpdateUserMutation();
 
+  const schema = yup.object().shape({
+    username: yup.string().required(),
+    email: yup.string().required(),
+    role: yup.string().required(),
+    password: user ? yup.string() : yup.string().required(),
+  });
+
   const {
     control,
     handleSubmit,
@@ -41,7 +43,7 @@ const UserForm = ({ user }: any) => {
     defaultValues: {
       username: user?.username || '',
       email: user?.email || '',
-      role: user?.role || '',
+      role: user?.role || 'user',
     },
     resolver: yupResolver(schema),
   });
@@ -49,6 +51,9 @@ const UserForm = ({ user }: any) => {
   const onSubmit = async (body: FormData) => {
     try {
       if (user) {
+        if (body.password === '') {
+          delete body.password;
+        }
         await updateUser({
           id: user.id,
           body,
@@ -96,6 +101,15 @@ const UserForm = ({ user }: any) => {
               { label: 'Admin', value: 'admin' },
             ]}
             disabled={authUser?.email === (user?.email || '')}
+          />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <CustomField
+            name="password"
+            label="Password"
+            type="password"
+            control={control}
+            errors={errors}
           />
         </Grid>
         <Grid item xs={12}>
