@@ -20,6 +20,7 @@ interface FormData {
   androidBaseURL?: string;
   type: string;
   image?: any;
+  accept?: string;
 }
 
 const schema = yup.object().shape({
@@ -30,6 +31,7 @@ const schema = yup.object().shape({
   androidBaseURL: yup.string(),
   type: yup.string().required(),
   image: yup.mixed(),
+  accept: yup.string(),
 });
 
 const PlatformForm = ({ platform, category }: any) => {
@@ -44,6 +46,7 @@ const PlatformForm = ({ platform, category }: any) => {
     control,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
@@ -54,6 +57,7 @@ const PlatformForm = ({ platform, category }: any) => {
       androidBaseURL: platform?.androidBaseURL || '',
       type: platform?.type || '',
       image: platform?.image || '',
+      accept: platform?.accept || '',
     },
     resolver: yupResolver(schema),
   });
@@ -77,6 +81,8 @@ const PlatformForm = ({ platform, category }: any) => {
       toast.error(error?.data?.message || error.error);
     }
   };
+
+  const type = watch('type');
 
   return (
     <form
@@ -154,6 +160,16 @@ const PlatformForm = ({ platform, category }: any) => {
             ]}
           />
         </Grid>
+        {type === 'file' && (
+          <Grid item xs={12} md={4}>
+            <CustomField
+              label="Accept"
+              control={control}
+              name="accept"
+              errors={errors}
+            />
+          </Grid>
+        )}
         <Grid item xs={12}>
           <Button
             size="large"
