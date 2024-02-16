@@ -18,6 +18,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import SearchIcon from '@mui/icons-material/Search';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import useDialog from '../hooks/useDialog';
+import FiltersForm from './FiltersForm';
 
 const RowActions = ({ id, onView, onEdit, onDelete }: any) => {
   const handleDelete = async () => {
@@ -57,8 +59,6 @@ const RowActions = ({ id, onView, onEdit, onDelete }: any) => {
     </Stack>
   );
 };
-
-// TypeScript type for props
 interface DataTableProps {
   title?: any;
   placeholder?: string;
@@ -71,7 +71,7 @@ interface DataTableProps {
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
   onExport?: () => void;
-  onFilter?: () => void;
+  filters?: any[];
 }
 
 const DataTable: React.FC<DataTableProps> = ({
@@ -86,12 +86,15 @@ const DataTable: React.FC<DataTableProps> = ({
   onEdit,
   onDelete,
   onExport,
-  onFilter,
+  filters,
 }) => {
+  const filterDialog = useDialog();
+
   const [paginationModel, setPaginationModel] = useState({
     pageSize: query.limit || 10,
     page: query.page ? query.page - 1 : 0,
   });
+
   useEffect(() => {
     setQuery({
       page: (paginationModel.page || 0) + 1,
@@ -102,12 +105,23 @@ const DataTable: React.FC<DataTableProps> = ({
   const debouncedSearch = debounce(async (search) => {
     setQuery(
       filterNotNullOrEmptyFields({
-        page: paginationModel.page,
-        limit: paginationModel.pageSize,
+        ...query,
+        page: 1,
+        limit: 10,
         search,
       })
     );
   }, 1000);
+
+  const onFilterSelect = (data: any) => {
+    filterDialog.close();
+    setQuery({
+      ...query,
+      page: 1,
+      limit: 10,
+      ...data,
+    });
+  };
 
   const actionColumn = {
     field: 'Actions',
@@ -123,79 +137,97 @@ const DataTable: React.FC<DataTableProps> = ({
   };
 
   return (
-    <Card sx={{ p: 2 }}>
-      <Stack
-        alignItems="center"
-        direction="row"
-        justifyContent="space-between"
-        spacing={1}
-        sx={{ mb: 1 }}
-      >
-        {title}
-        <div />
-        <Stack alignItems="center" direction="row" gap={1}>
-          <OutlinedInput
-            defaultValue=""
-            placeholder={placeholder || 'Search'}
-            size="small"
-            startAdornment={
-              <InputAdornment position="start">
-                <SvgIcon fontSize="small">
-                  <SearchIcon />
-                </SvgIcon>
-              </InputAdornment>
-            }
-            sx={{ maxWidth: 500 }}
-            onChange={(e) => debouncedSearch(e.target.value)}
-          />
-          {onFilter && (
-            <Button
-              color="inherit"
+    <>
+      <Card sx={{ p: 2 }}>
+        <Stack
+          alignItems="center"
+          direction="row"
+          justifyContent="space-between"
+          spacing={1}
+          sx={{ mb: 1 }}
+        >
+          {title}
+          <div />
+          <Stack alignItems="center" direction="row" gap={1}>
+            <OutlinedInput
+              defaultValue=""
+              placeholder={placeholder || 'Search'}
               size="small"
-              onClick={onFilter}
-              startIcon={
-                <SvgIcon fontSize="small">
-                  <FilterAltIcon />
-                </SvgIcon>
+              startAdornment={
+                <InputAdornment position="start">
+                  <SvgIcon fontSize="small">
+                    <SearchIcon />
+                  </SvgIcon>
+                </InputAdornment>
               }
-            >
-              Filter
-            </Button>
-          )}
-          {onExport && (
-            <Button
-              color="inherit"
-              size="small"
-              onClick={onExport}
-              startIcon={
-                <SvgIcon fontSize="small">
-                  <CloudDownloadIcon />
-                </SvgIcon>
-              }
-            >
-              Export
-            </Button>
-          )}
+              sx={{ maxWidth: 500 }}
+              onChange={(e) => debouncedSearch(e.target.value)}
+            />
+            {filters && (
+              <Button
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  filterDialog.open();
+                }}
+                startIcon={
+                  <SvgIcon fontSize="small">
+                    <FilterAltIcon />
+                  </SvgIcon>
+                }
+              >
+                Filter
+              </Button>
+            )}
+            {onExport && (
+              <Button
+                color="inherit"
+                size="small"
+                onClick={onExport}
+                startIcon={
+                  <SvgIcon fontSize="small">
+                    <CloudDownloadIcon />
+                  </SvgIcon>
+                }
+              >
+                Export
+              </Button>
+            )}
+          </Stack>
         </Stack>
-      </Stack>
-      <DataGrid
-        autoHeight
-        rows={rows || []}
-        columns={
-          !onView && !onEdit && !onDelete
-            ? columns
-            : columns.concat(actionColumn)
-        }
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
-        disableRowSelectionOnClick
-        pageSizeOptions={[10, 25, 50]}
-        pagination
-        paginationMode="server"
-        rowCount={rowCount || 0}
-        sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-      />
-    </Card>
+        <DataGrid
+          autoHeight
+          rows={rows || []}
+          columns={
+            !onView && !onEdit && !onDelete
+              ? columns
+              : columns.concat(actionColumn)
+          }
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          disableRowSelectionOnClick
+          pageSizeOptions={[10, 25, 50]}
+          pagination
+          paginationMode="server"
+          rowCount={rowCount || 0}
+          sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+        />
+      </Card>
+      {filterDialog.isOpen && (
+        <FiltersForm
+          onClose={() => {
+            setQuery({
+              page: 1,
+              limit: 10,
+            });
+            filterDialog.close();
+          }}
+          filters={filters}
+          onSubmit={onFilterSelect}
+          values={query}
+        />
+      )}
+    </>
   );
 };
 

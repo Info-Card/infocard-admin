@@ -64,6 +64,18 @@ const columns = [
   },
 ];
 
+const filters = [
+  {
+    label: 'Role',
+    name: 'role',
+    type: 'select',
+    options: [
+      { label: 'User', value: 'user' },
+      { label: 'Admin', value: 'admin' },
+    ],
+  },
+];
+
 const UsersPage = () => {
   const router = useRouter();
   const [query, setQuery] = useState({
@@ -133,6 +145,7 @@ const UsersPage = () => {
             onEdit={handleEditUser}
             onDelete={handleDeleteUser}
             onExport={handleExportUsers}
+            filters={filters}
           />
         </Stack>
       </Container>
