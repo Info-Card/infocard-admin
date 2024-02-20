@@ -15,6 +15,7 @@ import * as yup from 'yup';
 import CloseIcon from '@mui/icons-material/Close';
 import CustomField from '@/components/ui/CustomField';
 import { useLazyLinkTagQuery } from '@/store/tags';
+import { toast } from 'react-toastify';
 
 interface FormData {
   tagId: string;
@@ -39,9 +40,14 @@ const LinkTagDialog = ({ onClose, user }: any) => {
   });
 
   const onSubmit = async (data: FormData) => {
-    await linkTag({ ...data, user });
-    onClose();
-    reset();
+    try {
+      await linkTag({ ...data, user }).unwrap();
+      toast.success('Tag Added Successfully');
+      onClose();
+      reset();
+    } catch (error: any) {
+      toast.error(error?.data?.message || error.error);
+    }
   };
 
   return (
