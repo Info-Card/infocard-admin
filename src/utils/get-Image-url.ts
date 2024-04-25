@@ -8,7 +8,7 @@ import { isNullOrEmpty } from './helpers';
  */
 export const getUserImageUrl = (user: any) => {
   if (user && !isNullOrEmpty(user.image)) {
-    return `${BASE_URL}/v1/${user.image}`;
+    return `${user.image}`;
   } else {
     return '/assets/avatars/avatar-anika-visser.png';
   }
@@ -16,7 +16,7 @@ export const getUserImageUrl = (user: any) => {
 
 export const getImageUrl = (image?: string) => {
   if (!isNullOrEmpty(image)) {
-    return `${BASE_URL}/v1/${image}`;
+    return `${image}`;
   }
 
   return null;
